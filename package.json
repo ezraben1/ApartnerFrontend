@@ -12,7 +12,7 @@
     "postinstall": "npm run build"
   },
   "engines": {
-    "node": "14.x"
+    "node": "18.x"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.18",
