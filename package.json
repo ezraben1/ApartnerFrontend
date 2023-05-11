@@ -10,7 +10,6 @@
     "preview": "vite preview",
     "heroku-postbuild": "npm install && npm run build",
     "postinstall": "cd frontend && npm install && npm run build"
-
   },
   "engines": {
     "node": "14.x"
@@ -37,6 +36,7 @@
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.3",
+    "@types/node": "^20.1.2",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@types/react-image-gallery": "^1.2.0",

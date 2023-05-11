@@ -1,17 +1,17 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 
-export const API_BASE_URL = 'http://localhost:8000';
+export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
 
 const api: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000',
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    
   },
   withCredentials: true,
 });
+
 
 api.interceptors.request.use((config) => {
   const accessToken = Cookies.get('access_token');
