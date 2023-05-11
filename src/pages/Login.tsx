@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import auth from "../utils/auth";
-import Cookies from "js-cookie";
 import api from "../utils/api";
 import {
   Box,
@@ -25,28 +24,34 @@ function Login({ onLoginSuccess }: LoginProps) {
   const [error, setError] = useState("");
   const [loggedInUser, setLoggedInUser] = useState<any>(null); // state to store logged in user
 
+  // login.tsx
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
-      const response = await auth.login({ username, password });
+      const { data, status } = await auth.login({ username, password });
 
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("access_token", data.access);
-        Cookies.set("access_token", data.access); // set the access_token in the cookies
-        onLoginSuccess(data.access);
+      if (status === 200) {
+        // if response is ok
+        if (data.data && data.data.access) {
+          // check if access_token exists in the nested data
+          onLoginSuccess(data.data.access); // use the access_token in data
 
-        // fetch user details and set the logged in user state
-        const userResponse = await api.getUserDetails();
-        console.log("userResponse:", userResponse); // add this line to log the userResponse object
-        if (userResponse.ok) {
-          const user = await userResponse.json();
-          setLoggedInUser(user);
+          // fetch user details and set the logged in user state
+          const userResponse = await api.getUserDetails();
+          console.log("userResponse:", userResponse); // add this line to log the userResponse object
+          if (userResponse.ok) {
+            const user = await userResponse.json();
+            setLoggedInUser(user);
+          }
+
+          navigate("/");
+        } else {
+          console.log("No access_token in response data:", data); // for debugging
+          setError("Invalid credentials");
         }
-
-        navigate("/");
       } else {
+        console.log("Login response not ok:", status); // for debugging
         setError("Invalid credentials");
       }
     } catch (error) {

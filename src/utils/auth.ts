@@ -6,29 +6,30 @@ interface LoginParams {
   password: string;
 }
 
+// auth.ts
 const auth = {
-  login: async ({ username, password }: LoginParams): Promise<Response> => {
+  login: async ({ username, password }: LoginParams): Promise<{data: any, status: number}> => {
     const response = await api.post('/login/', { username, password });
-
-    const headers: HeadersInit = Object.entries(response.headers).reduce((acc: { [key: string]: string }, [key, value]) => {
-      acc[key] = value;
-      return acc;
-    }, {});
-    
     const data = await response.json();
-    Cookies.set('access_token', data.access_token); 
 
-    return new Response(JSON.stringify(data), {
-      status: response.status,
-      statusText: response.statusText,
-      headers,
-    });
+    if (response.status === 200) { // if response is ok
+      if (data.data && data.data.access) { // check if access_token exists in the nested data
+        Cookies.set('access_token', data.data.access); // set the access_token in the cookies
+      } else {
+        console.log("No access_token in response data:", data); // for debugging
+      }
+    } else {
+      console.log("Login response not ok:", response.status); // for debugging
+    }
+
+    return { data, status: response.status }; // return data and status instead of the raw response
   },
   logout: async (): Promise<void> => {
     Cookies.remove('access_token');
-    localStorage.removeItem('access_token');
     console.log('deleted')
   },
 };
+
+
 
 export default auth;
