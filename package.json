@@ -8,8 +8,8 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "heroku-postbuild": "npm install && npm run build",
-    "postinstall": "npm install && npm run build"
+    "start": "node server.js",
+    "postinstall": "npm run build"
   },
   "engines": {
     "node": "14.x"
