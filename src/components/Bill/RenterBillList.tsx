@@ -12,6 +12,7 @@ import {
   Input,
   Select,
 } from "@chakra-ui/react";
+import { useUserType } from "../../utils/useUserType";
 
 const RetnerBillsList: React.FC = () => {
   const { apartmentId } = useParams<{ apartmentId?: string }>();
@@ -59,7 +60,19 @@ const RetnerBillsList: React.FC = () => {
     }
     return sorted;
   }, [filteredBills, sortOption]);
+  const { userType, status: userTypeStatus } = useUserType();
 
+  if (userTypeStatus === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (userTypeStatus === "error" || userType === null) {
+    return <div>Please log in to access this page.</div>;
+  }
+
+  if (userType !== "renter") {
+    return <div>You are not a renter!</div>;
+  }
   return (
     <Box maxW="800px" mx="auto" p="6">
       <VStack align="stretch" spacing={6}>

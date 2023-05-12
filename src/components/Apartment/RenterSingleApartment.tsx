@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { ApartmentAPI } from "../../types";
 import { fetchUserId } from "../../utils/userId";
 import InquiryForm from "../Inquiry/InquiryForm";
+import { useUserType } from "../../utils/useUserType";
 
 const RenterSingleApartment: React.FC = () => {
   const [apartment, setApartment] = useState<ApartmentAPI | null>(null);
@@ -49,6 +50,18 @@ const RenterSingleApartment: React.FC = () => {
       setLoading(false);
     }
   }, [apartmentData, status]);
+  const { userType, status: userTypeStatus } = useUserType();
+  if (userTypeStatus === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (userTypeStatus === "error" || userType === null) {
+    return <div>Please log in to access this page.</div>;
+  }
+
+  if (userType !== "renter") {
+    return <div>You are not a renter!</div>;
+  }
 
   if (userLoading) {
     return <div>Loading user data...</div>;

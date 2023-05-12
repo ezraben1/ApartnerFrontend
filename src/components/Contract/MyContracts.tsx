@@ -11,18 +11,31 @@ import {
   ListItem,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
+import { useUserType } from "../../utils/useUserType";
 
 const MyContracts: React.FC = () => {
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [contractData, status] = useAuthorizedData<Contract[]>(
     "/owner/owner-contarcts/"
   );
+  const { userType, status: userTypeStatus } = useUserType();
 
   useEffect(() => {
     if (status === "idle" && contractData) {
       setContracts(contractData);
     }
   }, [contractData, status]);
+  if (status === "loading" || userTypeStatus === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (userTypeStatus === "error" || userType === null) {
+    return <div>Please log in to access this page.</div>;
+  }
+
+  if (userType !== "owner") {
+    return <div>You are not an owner!</div>;
+  }
   if (status === "error" || !contracts || contracts.length === 0) {
     return <Text>No contracts found.</Text>;
   }

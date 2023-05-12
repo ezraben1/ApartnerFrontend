@@ -16,6 +16,7 @@ import {
 import { Link } from "react-router-dom";
 import { Room } from "../../types";
 import { fetchUserId } from "../../utils/userId";
+import { useUserType } from "../../utils/useUserType";
 
 const RenterSingleRoom: React.FC = () => {
   const [room, setRoom] = useState<Room | null>(null);
@@ -46,21 +47,18 @@ const RenterSingleRoom: React.FC = () => {
       setLoading(false);
     }
   }, [roomData, status]);
+  const { userType, status: userTypeStatus } = useUserType();
 
-  if (userLoading) {
-    return <div>Loading user data...</div>;
-  }
-
-  if (!renterId) {
-    return <div>Error fetching renter ID.</div>;
-  }
-
-  if (status === "loading") {
+  if (userTypeStatus === "loading") {
     return <div>Loading...</div>;
   }
 
-  if (status === "error" || !room) {
-    return <div>Error loading room data.</div>;
+  if (userTypeStatus === "error" || userType === null) {
+    return <div>Please log in to access this page.</div>;
+  }
+
+  if (userType !== "renter") {
+    return <div>You are not a renter!</div>;
   }
 
   return (

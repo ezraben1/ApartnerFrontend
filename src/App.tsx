@@ -30,6 +30,7 @@ import InquirySearch from "./components/Inquiry/InquirySearch";
 import SearcherSingleContract from "./components/Contract/SearcherSingleContract";
 import RenterSingleRoom from "./components/Room/RetnerSingleRoom";
 import RenterSingleContract from "./components/Contract/RenterSingleContract";
+import RenterPage from "./pages/Renter/RenterPage";
 
 function App() {
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -85,6 +86,7 @@ function App() {
               />
               <Route path="/owner/my-rooms" element={<MyRooms />} />
               <Route path="/owner/my-contracts" element={<MyContracts />} />
+              <Route path="/renter/" element={<RenterPage />} />
 
               <Route
                 path="/renter/my-apartment/"

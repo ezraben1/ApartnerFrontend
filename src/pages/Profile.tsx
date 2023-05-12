@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Col } from "react-bootstrap";
+import { useUserType } from "../utils/useUserType";
 
 interface User {
   id: number;
@@ -110,7 +111,15 @@ function Profile() {
   if (!user) {
     return <div>Loading...</div>;
   }
+  const { userType, status: userTypeStatus } = useUserType();
 
+  if (userTypeStatus === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (userTypeStatus === "error" || userType === null) {
+    return <div>Please log in to access this page.</div>;
+  }
   return (
     <Container maxW="xl" mt={10}>
       <Row>

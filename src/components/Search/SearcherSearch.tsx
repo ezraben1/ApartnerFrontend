@@ -3,6 +3,7 @@ import { useAuthorizedData } from "../../utils/useAuthorizedData";
 import { Room } from "../../types";
 import SearchFilters from "./SearchFilters";
 import Pagination from "../../layout/Pagination";
+import { useUserType } from "../../utils/useUserType";
 
 const SearcherSearch: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -28,7 +29,19 @@ const SearcherSearch: React.FC = () => {
   const onPaginate = (url: string) => {
     setUrl(url);
   };
+  const { userType, status: userTypeStatus } = useUserType();
 
+  if (userTypeStatus === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (userTypeStatus === "error" || userType === null) {
+    return <div>Please log in to access this page.</div>;
+  }
+
+  if (userType !== "searcher") {
+    return <div>You are not a Searcher!</div>;
+  }
   return (
     <div>
       <SearchFilters onFilterSubmit={handleFilterSubmit} rooms={rooms} />

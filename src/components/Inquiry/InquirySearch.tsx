@@ -3,6 +3,7 @@ import InquiryFilters from "./InquiryFilters";
 import InquiryList from "./InquiryList";
 import Pagination from "../../layout/Pagination";
 import { useAuthorizedData } from "../../utils/useAuthorizedData";
+import { useUserType } from "../../utils/useUserType";
 
 const InquirySearch: React.FC = () => {
   const [filters, setFilters] = useState<{ [key: string]: any }>({});
@@ -65,7 +66,15 @@ const InquirySearch: React.FC = () => {
   const onPaginate = (url: string) => {
     setUrl(url);
   };
+  const { userType, status: userTypeStatus } = useUserType();
 
+  if (userTypeStatus === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (userTypeStatus === "error" || userType === null) {
+    return <div>Please log in to access this page.</div>;
+  }
   return (
     <div>
       <InquiryFilters onFilterSubmit={handleFilterSubmit} />

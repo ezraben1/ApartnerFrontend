@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import RoomList from "./RoomList";
 import { useAuthorizedData } from "../../utils/useAuthorizedData";
 import { Room } from "../../types";
+import { useUserType } from "../../utils/useUserType";
 
 const MyRooms: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -11,13 +12,24 @@ const MyRooms: React.FC = () => {
     previous: string | null;
     results: Room[];
   }>("/owner/owner-rooms/");
+  const { userType, status: userTypeStatus } = useUserType();
 
   useEffect(() => {
     if (status === "idle" && roomData) {
       setRooms(roomData.results);
     }
   }, [roomData, status]);
+  if (status === "loading" || userTypeStatus === "loading") {
+    return <div>Loading...</div>;
+  }
 
+  if (userTypeStatus === "error" || userType === null) {
+    return <div>Please log in to access this page.</div>;
+  }
+
+  if (userType !== "owner") {
+    return <div>You are not an owner!</div>;
+  }
   return (
     <div>
       <h1>My Rooms</h1>
