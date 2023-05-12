@@ -49,16 +49,27 @@ const RenterSingleRoom: React.FC = () => {
   }, [roomData, status]);
   const { userType, status: userTypeStatus } = useUserType();
 
-  if (userTypeStatus === "loading") {
-    return <div>Loading...</div>;
-  }
-
   if (userTypeStatus === "error" || userType === null) {
     return <div>Please log in to access this page.</div>;
   }
 
-  if (userType !== "renter") {
-    return <div>You are not a renter!</div>;
+  if (userType !== "owner") {
+    return <div>You are not an owner!</div>;
+  }
+  if (userLoading) {
+    return <div>Loading user data...</div>;
+  }
+
+  if (!renterId) {
+    return <div>Error fetching renter ID.</div>;
+  }
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (status === "error" || !room) {
+    return <div>Error loading room data.</div>;
   }
 
   return (
