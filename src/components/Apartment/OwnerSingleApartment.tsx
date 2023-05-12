@@ -61,7 +61,11 @@ const SingleApartment: React.FC = () => {
   ) => {
     if (event.target.files) {
       const formData = new FormData();
-      formData.append("image", event.target.files[0]);
+      // Loop over the files and append each to formData
+      Array.from(event.target.files).forEach((file) => {
+        formData.append("images", file);
+      });
+
       try {
         await api.patch(
           `/owner/owner-apartments/${apartmentData?.id}/upload_image/`,
@@ -72,15 +76,15 @@ const SingleApartment: React.FC = () => {
             },
           }
         );
-        alert("Image uploaded successfully!");
+        alert("Images uploaded successfully!");
       } catch (error) {
-        console.error("Error uploading image:", error);
+        console.error("Error uploading images:", error);
 
         if (error && (error as any).response && (error as any).response.data) {
           console.error("Server error message:", (error as any).response.data);
         }
 
-        alert("Failed to upload image.");
+        alert("Failed to upload images.");
       }
     }
   };
