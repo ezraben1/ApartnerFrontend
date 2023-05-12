@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Col } from "react-bootstrap";
-import { useUserType } from "../utils/useUserType";
 
 interface User {
   id: number;
@@ -25,6 +24,12 @@ interface User {
   first_name: string;
   last_name: string;
   avatar: string | null;
+  age: number;
+  gender: string;
+  bio: string;
+  preferred_location: string;
+  preferred_roommates: string;
+  preferred_rent: number;
 }
 
 function Profile() {
@@ -109,17 +114,9 @@ function Profile() {
   };
 
   if (!user) {
-    return <div>Loading...</div>;
-  }
-  const { userType, status: userTypeStatus } = useUserType();
-
-  if (userTypeStatus === "loading") {
-    return <div>Loading...</div>;
+    return <div>Log in please!</div>;
   }
 
-  if (userTypeStatus === "error" || userType === null) {
-    return <div>Please log in to access this page.</div>;
-  }
   return (
     <Container maxW="xl" mt={10}>
       <Row>
@@ -217,6 +214,125 @@ function Profile() {
                   }}
                 />
               </FormControl>
+              <FormControl mb={4}>
+                <FormLabel fontSize="xl">Age:</FormLabel>
+                <Input
+                  type="number"
+                  name="age"
+                  onChange={handleInputChange}
+                  value={updatedUser?.age ?? user.age}
+                  borderRadius="full"
+                  borderColor="gray.300"
+                  borderWidth="2px"
+                  py={4}
+                  px={6}
+                  _focus={{
+                    outline: "none",
+                    boxShadow: "outline",
+                    borderColor: "blue.500",
+                  }}
+                />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel fontSize="xl">gender:</FormLabel>
+                <Input
+                  type="text"
+                  name="gender"
+                  onChange={handleInputChange}
+                  value={updatedUser?.gender ?? user.gender}
+                  borderRadius="full"
+                  borderColor="gray.300"
+                  borderWidth="2px"
+                  py={4}
+                  px={6}
+                  _focus={{
+                    outline: "none",
+                    boxShadow: "outline",
+                    borderColor: "blue.500",
+                  }}
+                />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel fontSize="xl">bio:</FormLabel>
+                <Input
+                  type="text"
+                  name="bio"
+                  onChange={handleInputChange}
+                  value={updatedUser?.bio ?? user.bio}
+                  borderRadius="full"
+                  borderColor="gray.300"
+                  borderWidth="2px"
+                  py={4}
+                  px={6}
+                  _focus={{
+                    outline: "none",
+                    boxShadow: "outline",
+                    borderColor: "blue.500",
+                  }}
+                />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel fontSize="xl">Preferred Location:</FormLabel>
+                <Input
+                  type="text"
+                  name="preferred_location"
+                  onChange={handleInputChange}
+                  value={
+                    updatedUser?.preferred_location ?? user.preferred_location
+                  }
+                  borderRadius="full"
+                  borderColor="gray.300"
+                  borderWidth="2px"
+                  py={4}
+                  px={6}
+                  _focus={{
+                    outline: "none",
+                    boxShadow: "outline",
+                    borderColor: "blue.500",
+                  }}
+                />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel fontSize="xl">Preferred Roommates:</FormLabel>
+                <Input
+                  type="text"
+                  name="preferred_roommates"
+                  onChange={handleInputChange}
+                  value={
+                    updatedUser?.preferred_roommates ?? user.preferred_roommates
+                  }
+                  borderRadius="full"
+                  borderColor="gray.300"
+                  borderWidth="2px"
+                  py={4}
+                  px={6}
+                  _focus={{
+                    outline: "none",
+                    boxShadow: "outline",
+                    borderColor: "blue.500",
+                  }}
+                />
+              </FormControl>
+              <FormControl mb={4}>
+                <FormLabel fontSize="xl">Preferred Rent:</FormLabel>
+                <Input
+                  type="text"
+                  name="preferred_rent"
+                  onChange={handleInputChange}
+                  value={updatedUser?.preferred_rent ?? user.preferred_rent}
+                  borderRadius="full"
+                  borderColor="gray.300"
+                  borderWidth="2px"
+                  py={4}
+                  px={6}
+                  _focus={{
+                    outline: "none",
+                    boxShadow: "outline",
+                    borderColor: "blue.500",
+                  }}
+                />
+              </FormControl>
+
               <FormControl mb={4}>
                 <FormLabel fontSize="xl">Profile Picture:</FormLabel>
                 <Input

@@ -1,5 +1,6 @@
 import api from './api';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginParams {
   username: string;
@@ -25,8 +26,10 @@ const auth = {
     return { data, status: response.status }; // return data and status instead of the raw response
   },
   logout: async (): Promise<void> => {
+    const navigate = useNavigate();
     Cookies.remove('access_token');
     console.log('deleted')
+    navigate('/')
   },
 };
 
