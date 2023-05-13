@@ -61,7 +61,6 @@ const SingleApartment: React.FC = () => {
   ) => {
     if (event.target.files) {
       const formData = new FormData();
-      // Loop over the files and append each to formData
       Array.from(event.target.files).forEach((file) => {
         formData.append("images", file);
       });

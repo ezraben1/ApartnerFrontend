@@ -48,7 +48,8 @@ const SingleBill: React.FC = () => {
     handleDownloadFile(
       `/owner/owner-apartments/${apartmentId}/bills/${billId}/download/`,
       billId || "",
-      bill?.bill_type || "bill"
+      "contract",
+      "pdf"
     );
   };
 
