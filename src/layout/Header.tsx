@@ -10,6 +10,7 @@ import {
   MenuList,
   MenuItem,
   useMediaQuery,
+  MenuDivider,
 } from "@chakra-ui/react";
 import { Text as ChakraText } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
@@ -68,12 +69,6 @@ const Header: React.FC<HeaderProps> = ({ onLoginSuccess }) => {
               </MenuButton>
 
               <MenuList>
-                <MenuItem as={RouterLink} to="/inquiries">
-                  Inquiries
-                </MenuItem>
-                <MenuItem as={RouterLink} to="/me">
-                  Me
-                </MenuItem>
                 <MenuItem as={RouterLink} to="/owner">
                   Owner
                 </MenuItem>
@@ -83,6 +78,25 @@ const Header: React.FC<HeaderProps> = ({ onLoginSuccess }) => {
                 <MenuItem as={RouterLink} to="/renter">
                   Renter
                 </MenuItem>
+                <MenuDivider />
+                <MenuItem as={RouterLink} to="/inquiries">
+                  Inquiries
+                </MenuItem>
+                <MenuItem as={RouterLink} to="/me">
+                  Me
+                </MenuItem>
+                {username ? (
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                ) : (
+                  <>
+                    <MenuItem as={RouterLink} to="/login">
+                      Login
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to="/signup">
+                      Sign Up
+                    </MenuItem>
+                  </>
+                )}
               </MenuList>
             </Menu>
           ) : (
