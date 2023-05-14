@@ -19,15 +19,18 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../utils/api";
 import Cookies from "js-cookie";
+import { useUserType } from "../utils/useUserType";
 
 interface HeaderProps {
   currentUser: any;
-  onLoginSuccess: (token?: string) => Promise<void>; // Updated type
+  onLoginSuccess: (token?: string) => Promise<void>;
 }
 
 const Header: React.FC<HeaderProps> = ({}) => {
   const [isSmallerThanLg] = useMediaQuery("(max-width: 991px)");
   const [username, setUsername] = useState<string | null>(null);
+  const { userType } = useUserType();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,6 +49,7 @@ const Header: React.FC<HeaderProps> = ({}) => {
     Cookies.remove("access_token");
     console.log("deleted");
     navigate("/");
+    window.location.reload();
   };
 
   return (
@@ -69,15 +73,49 @@ const Header: React.FC<HeaderProps> = ({}) => {
               </MenuButton>
 
               <MenuList>
-                <MenuItem as={RouterLink} to="/owner">
-                  Owner
-                </MenuItem>
-                <MenuItem as={RouterLink} to="/searcher">
-                  Searcher
-                </MenuItem>
-                <MenuItem as={RouterLink} to="/renter">
-                  Renter
-                </MenuItem>
+                {userType === "owner" && (
+                  <>
+                    <MenuItem as={RouterLink} to="/owner">
+                      Owner
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to="/owner/my-apartments">
+                      My Apartments
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to="/owner/my-rooms">
+                      My Rooms
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to="/owner/my-contracts">
+                      My Contracts
+                    </MenuItem>
+                  </>
+                )}
+                {userType === "searcher" && (
+                  <>
+                    <MenuItem as={RouterLink} to="/searcher">
+                      Searcher
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to="/searcher/search">
+                      Search
+                    </MenuItem>
+                  </>
+                )}
+                {userType === "renter" && (
+                  <>
+                    <MenuItem as={RouterLink} to="/renter">
+                      Renter
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to="/renter/my-apartment">
+                      My Apartment
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to="/renter/my-bills">
+                      My Bills
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to="/renter/my-room">
+                      My Room
+                    </MenuItem>
+                  </>
+                )}
+
                 <MenuDivider />
                 <MenuItem as={RouterLink} to="/inquiries">
                   Inquiries
@@ -139,106 +177,118 @@ const Header: React.FC<HeaderProps> = ({}) => {
   );
 };
 
-const NavLinks = () => (
-  <Flex as="nav" alignItems="center" justifyContent="space-between" w="100%">
-    <NavLink to="/inquiries">My Inquiries</NavLink>
-    <NavLink to="/me">Me</NavLink>
+const NavLinks = () => {
+  const { userType } = useUserType();
 
-    <Menu>
-      <MenuButton
-        as={Button}
-        color="black"
-        fontWeight="medium"
-        mr="4"
-        _hover={{ textDecoration: "none" }}
-      >
-        <Flex alignItems="center">
-          <RouterLink
-            to="/owner"
-            style={{ textDecoration: "none", color: "black" }}
+  return (
+    <Flex as="nav" alignItems="center" justifyContent="space-between" w="100%">
+      <NavLink to="/inquiries">My Inquiries</NavLink>
+      <NavLink to="/me">Me</NavLink>
+
+      {userType === "owner" && (
+        <Menu>
+          <MenuButton
+            as={Button}
+            color="black"
+            fontWeight="medium"
+            mr="4"
+            _hover={{ textDecoration: "none" }}
           >
-            Owner
-          </RouterLink>
-          <ChevronRightIcon ml="1" />
-        </Flex>
-      </MenuButton>
-      <MenuList bg="black">
-        <MenuItem as={RouterLink} to="/owner/">
-          Owner
-        </MenuItem>
-        <MenuItem as={RouterLink} to="/owner/my-apartments">
-          My Apartments
-        </MenuItem>
-        <MenuItem as={RouterLink} to="/owner/my-rooms">
-          My Rooms
-        </MenuItem>
-        <MenuItem as={RouterLink} to="/owner/my-contracts">
-          My Contracts
-        </MenuItem>
-      </MenuList>
-    </Menu>
-    <Menu>
-      <MenuButton
-        as={Button}
-        color="black"
-        fontWeight="medium"
-        mr="4"
-        _hover={{ textDecoration: "none" }}
-      >
-        <Flex alignItems="center">
-          <RouterLink
-            to="/Searcher"
-            style={{ textDecoration: "none", color: "black" }}
+            <Flex alignItems="center">
+              <RouterLink
+                to="/owner"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                Owner
+              </RouterLink>
+              <ChevronRightIcon ml="1" />
+            </Flex>
+          </MenuButton>
+          <MenuList bg="black">
+            <MenuItem as={RouterLink} to="/owner/">
+              Owner
+            </MenuItem>
+            <MenuItem as={RouterLink} to="/owner/my-apartments">
+              My Apartments
+            </MenuItem>
+            <MenuItem as={RouterLink} to="/owner/my-rooms">
+              My Rooms
+            </MenuItem>
+            <MenuItem as={RouterLink} to="/owner/my-contracts">
+              My Contracts
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      )}
+
+      {userType === "searcher" && (
+        <Menu>
+          <MenuButton
+            as={Button}
+            color="black"
+            fontWeight="medium"
+            mr="4"
+            _hover={{ textDecoration: "none" }}
           >
-            Searcher
-          </RouterLink>
-          <ChevronRightIcon ml="1" />
-        </Flex>
-      </MenuButton>
-      <MenuList bg="black">
-        <MenuItem as={RouterLink} to="/searcher/">
-          Searcher
-        </MenuItem>
-        <MenuItem as={RouterLink} to="/searcher/search">
-          Search
-        </MenuItem>
-      </MenuList>
-    </Menu>
-    <Menu>
-      <MenuButton
-        as={Button}
-        color="black"
-        fontWeight="medium"
-        mr="4"
-        _hover={{ textDecoration: "none" }}
-      >
-        <Flex alignItems="center">
-          <RouterLink
-            to="/Renter"
-            style={{ textDecoration: "none", color: "black" }}
+            <Flex alignItems="center">
+              <RouterLink
+                to="/searcher"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                Searcher
+              </RouterLink>
+              <ChevronRightIcon ml="1" />
+            </Flex>
+          </MenuButton>
+          <MenuList bg="black">
+            <MenuItem as={RouterLink} to="/searcher/">
+              Searcher
+            </MenuItem>
+            <MenuItem as={RouterLink} to="/searcher/search">
+              Search
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      )}
+
+      {userType === "renter" && (
+        <Menu>
+          <MenuButton
+            as={Button}
+            color="black"
+            fontWeight="medium"
+            mr="4"
+            _hover={{ textDecoration: "none" }}
           >
-            Renter
-          </RouterLink>
-          <ChevronRightIcon ml="1" />
-        </Flex>
-      </MenuButton>
-      <MenuList bg="black">
-        <MenuItem as={RouterLink} to="/renter/">
-          Renter
-        </MenuItem>
-        <MenuItem as={RouterLink} to="/renter/my-apartment">
-          My Apartment
-        </MenuItem>
-        <MenuItem as={RouterLink} to="/renter/my-bills">
-          My Bills
-        </MenuItem>
-        <MenuItem as={RouterLink} to="/renter/my-room">
-          My Room
-        </MenuItem>
-      </MenuList>
-    </Menu>
-  </Flex>
-);
+            <Flex alignItems="center">
+              <RouterLink
+                to="/renter"
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                Renter
+              </RouterLink>
+              <ChevronRightIcon ml="1" />
+            </Flex>
+          </MenuButton>
+          <MenuList bg="black">
+            <MenuItem as={RouterLink} to="/renter/">
+              Renter
+            </MenuItem>
+            <MenuItem as={RouterLink} to="/renter/my-apartment">
+              My Apartment
+            </MenuItem>
+            <MenuItem as={RouterLink} to="/renter/my-bills">
+              My Bills
+            </MenuItem>
+            <MenuItem as={RouterLink} to="/renter/my-room">
+              My Room
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      )}
+    </Flex>
+  );
+};
 
 const NavLink = ({
   to,

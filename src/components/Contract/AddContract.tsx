@@ -37,16 +37,23 @@ const AddContract: React.FC<AddContractProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    Object.keys(newContract).forEach((key) => {
+      formData.append(key, newContract[key]);
+    });
+
     try {
-      const response = await api.post(
+      const response = await api.postWithFormData(
         `/owner/owner-apartments/${apartmentId}/room/${roomId}/contracts/`,
-        newContract
+        formData
       );
 
-      if (response.status === 201) {
+      if (response.ok) {
         const createdData = await response.json();
         onCreate(createdData);
         onClose();
+        alert("Created!");
       } else {
         throw new Error("Error creating contract");
       }

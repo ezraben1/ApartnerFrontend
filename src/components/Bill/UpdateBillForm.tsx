@@ -72,7 +72,6 @@ const UpdateBillForm: React.FC<UpdateBillFormProps> = ({
           required
         />
       </Form.Group>
-      {/* Add a file input field for the bill file (if applicable) */}
       <Button type="submit">Update Bill</Button>
     </Form>
   );

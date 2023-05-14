@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Contract } from '../../types';
+import React, { useEffect, useState } from "react";
+import { Contract } from "../../types";
 import {
   Button,
   Modal,
@@ -13,8 +13,8 @@ import {
   FormLabel,
   Input,
   useDisclosure,
-} from '@chakra-ui/react';
-import api from '../../utils/api';
+} from "@chakra-ui/react";
+import api from "../../utils/api";
 
 interface UpdateContractFormProps {
   contract: Contract;
@@ -23,9 +23,19 @@ interface UpdateContractFormProps {
   roomId?: string;
 }
 
-const UpdateContractForm: React.FC<UpdateContractFormProps> = ({ contract, onUpdate, apartmentId, roomId }) => {
+const UpdateContractForm: React.FC<UpdateContractFormProps> = ({
+  contract,
+  onUpdate,
+  apartmentId,
+  roomId,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [updatedContract, setUpdatedContract] = useState<Contract>(contract);
+
+  // Update updatedContract and contractId whenever the contract prop changes
+  useEffect(() => {
+    setUpdatedContract(contract);
+  }, [contract]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,23 +44,44 @@ const UpdateContractForm: React.FC<UpdateContractFormProps> = ({ contract, onUpd
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!apartmentId || !roomId) {
-      console.error('Apartment ID or Room ID is not defined');
+      console.error("Apartment ID or Room ID is not defined");
       return;
     }
-  
+
+    // Check if the file field is present
+    if (updatedContract.file) {
+      // If it is, alert the user and stop the function
+      alert("Please delete the file before updating the contract.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("start_date", updatedContract.start_date);
+    formData.append("end_date", updatedContract.end_date);
+    formData.append(
+      "deposit_amount",
+      updatedContract.deposit_amount.toString()
+    );
+    formData.append("rent_amount", updatedContract.rent_amount.toString());
+
     try {
-      const response = await api.patch(`/owner/owner-apartments/${apartmentId}/room/${roomId}/contracts/${contract.id}/`, updatedContract);
+      const response = await api.putWithFormData(
+        `/owner/owner-apartments/${apartmentId}/room/${roomId}/contracts/${contract.id}/`,
+        formData // Use formData instead of updatedContract
+      );
 
       if (response.status === 200) {
         const updatedData = await response.json();
         onUpdate(updatedData);
         onClose();
+        alert("updated!");
       } else {
-        throw new Error('Error updating contract');
+        throw new Error("Error updating contract");
       }
     } catch (error) {
-      console.error('Error updating contract:', error);
+      console.error("Error updating contract:", error);
     }
   };
 

@@ -30,6 +30,8 @@ const auth = {
     Cookies.remove('access_token');
     console.log('deleted')
     navigate('/')
+    window.location.reload();
+
   },
 };
 

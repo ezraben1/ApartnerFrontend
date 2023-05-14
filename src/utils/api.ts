@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const baseURL = 'http://localhost:8000';
 
 const api: AxiosInstance = axios.create({
   baseURL,
@@ -39,6 +39,7 @@ const post = async (url: string, data: any): Promise<Response> => {
     headers,
   });
 };
+
 const postWithFormData = async (
   url: string,
   formData: FormData
@@ -64,6 +65,58 @@ const postWithFormData = async (
     headers,
   });
 };
+const patchtWithFormData = async (
+  url: string,
+  formData: FormData
+): Promise<Response> => {
+  const response = await api.request({
+    url,
+    method: "PATCH",
+    data: formData,
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  const headers: HeadersInit = Object.entries(response.headers).reduce(
+    (acc: { [key: string]: string }, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    },
+    {}
+  );
+
+  return new Response(JSON.stringify(response.data), {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+};
+
+const putWithFormData = async (
+  url: string,
+  formData: FormData
+): Promise<Response> => {
+  const response = await api.request({
+    url,
+    method: "PATCH",
+    data: formData,
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  const headers: HeadersInit = Object.entries(response.headers).reduce(
+    (acc: { [key: string]: string }, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    },
+    {}
+  );
+
+  return new Response(JSON.stringify(response.data), {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+};
+
 
 const getUserDetails = async (): Promise<Response> => {
   const response = await api.get('/core/me/');
@@ -174,6 +227,8 @@ export default {
   remove,
   put,
   getBlob,
-  postWithFormData 
+  postWithFormData,
+  patchtWithFormData,
+  putWithFormData
 };
 

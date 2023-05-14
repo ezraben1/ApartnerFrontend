@@ -82,6 +82,7 @@ export interface Contract {
   deposit_amount: number;
   terms_and_conditions: string | null;
   file: File | null;
+  [key: string]: any;
 }
 
 export interface Bill {

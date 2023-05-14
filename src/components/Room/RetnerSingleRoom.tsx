@@ -53,8 +53,8 @@ const RenterSingleRoom: React.FC = () => {
     return <div>Please log in to access this page.</div>;
   }
 
-  if (userType !== "owner") {
-    return <div>You are not an owner!</div>;
+  if (userType !== "renter") {
+    return <div>You are not an retner!</div>;
   }
   if (userLoading) {
     return <div>Loading user data...</div>;
@@ -98,6 +98,13 @@ const RenterSingleRoom: React.FC = () => {
             </Box>
           )}
         </Flex>
+        <Flex>
+          <Stat>
+            <StatLabel fontSize="md">Description</StatLabel>
+            <StatNumber fontSize="sm">{room.description}</StatNumber>
+          </Stat>
+        </Flex>
+
         <StatGroup width="100%" justifyContent="space-around" mt={4}>
           <Stat>
             <StatLabel fontSize="md">Size</StatLabel>
@@ -111,10 +118,7 @@ const RenterSingleRoom: React.FC = () => {
             <StatLabel fontSize="md">Window</StatLabel>
             <StatNumber fontSize="sm">{room.window ? "Yes" : "No"}</StatNumber>
           </Stat>
-          <Stat>
-            <StatLabel fontSize="md">Description</StatLabel>
-            <StatNumber fontSize="sm">{room.description}</StatNumber>
-          </Stat>
+
           <Stat>
             <StatLabel fontSize="md">Contract Start Date</StatLabel>
             <StatNumber fontSize="sm">
