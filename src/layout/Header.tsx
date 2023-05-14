@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../utils/api";
 import auth from "../utils/auth";
+import Cookies from "js-cookie";
 
 interface HeaderProps {
   currentUser: any;
@@ -43,8 +44,8 @@ const Header: React.FC<HeaderProps> = ({ onLoginSuccess }) => {
   }, []);
 
   const handleLogout = async () => {
-    await auth.logout();
-    onLoginSuccess(); // This will be called without token to clear the logged-in state
+    Cookies.remove("access_token");
+    console.log("deleted");
     navigate("/");
   };
 
