@@ -1,6 +1,20 @@
-import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
-import React, { ChangeEvent, useRef, useState } from 'react';
-import api from '../../utils/api';
+import { useState } from "react";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+} from "@chakra-ui/react";
+import React, { ChangeEvent, useRef } from "react";
+import api from "../../utils/api";
 
 interface UploadFileFormProps {
   onUpload: (updatedData: any) => void;
@@ -8,10 +22,14 @@ interface UploadFileFormProps {
   apiEndpoint: string;
 }
 
-
-const UploadFileForm: React.FC<UploadFileFormProps> = ({ onUpload, accept, apiEndpoint }) => {
+const UploadFileForm: React.FC<UploadFileFormProps> = ({
+  onUpload,
+  accept,
+  apiEndpoint,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -27,18 +45,23 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({ onUpload, accept, apiEn
 
     const file = fileInput.current.files[0];
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
 
     try {
       const response = await api.patch(apiEndpoint, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
       const updatedData = await response.json();
       onUpload(updatedData);
+      setUploadSuccess(true);
+      setTimeout(() => {
+        setIsOpen(false);
+        window.close();
+      }, 2000); // Close window after 2 seconds
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     }
   };
 
@@ -53,16 +76,26 @@ const UploadFileForm: React.FC<UploadFileFormProps> = ({ onUpload, accept, apiEn
           <ModalCloseButton />
           <form onSubmit={handleSubmit}>
             <ModalBody>
-            <FormControl>
-            <FormLabel>File</FormLabel>
-            <Input type="file" ref={fileInput} onChange={handleFileChange} accept={accept} />
-          </FormControl>
-              {file && (
-                <Text mt={2}>Selected file: {file.name}</Text>
+              <FormControl>
+                <FormLabel>File</FormLabel>
+                <Input
+                  type="file"
+                  ref={fileInput}
+                  onChange={handleFileChange}
+                  accept={accept}
+                />
+              </FormControl>
+              {file && <Text mt={2}>Selected file: {file.name}</Text>}
+              {uploadSuccess && (
+                <Text mt={2} color="green.500">
+                  File uploaded successfully!
+                </Text>
               )}
             </ModalBody>
             <ModalFooter>
-              <Button type="submit" mr={3}>Upload</Button>
+              <Button type="submit" mr={3}>
+                Upload
+              </Button>
               <Button onClick={() => setIsOpen(false)}>Cancel</Button>
             </ModalFooter>
           </form>
