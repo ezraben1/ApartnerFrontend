@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Button,
   AlertDialog,
@@ -8,25 +8,30 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useDisclosure,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { Contract } from '../../types';
-import api from '../../utils/api';
+import { Contract } from "../../types";
+import api from "../../utils/api";
 
 interface DeleteContractProps {
   contract: Contract;
   apartmentId?: string;
   roomId?: string;
-  onDelete: (deletedContract: Contract) => void; 
+  onDelete: (deletedContract: Contract) => void;
 }
 
-const DeleteContract: React.FC<DeleteContractProps> = ({ contract, onDelete, apartmentId, roomId }) => {
+const DeleteContract: React.FC<DeleteContractProps> = ({
+  contract,
+  onDelete,
+  apartmentId,
+  roomId,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef<HTMLButtonElement>(null);
 
   const handleDelete = async () => {
     if (!apartmentId || !roomId) {
-      console.error('Apartment ID or Room ID is not defined');
+      console.error("Apartment ID or Room ID is not defined");
       return;
     }
 
@@ -38,10 +43,10 @@ const DeleteContract: React.FC<DeleteContractProps> = ({ contract, onDelete, apa
         onDelete(contract);
         onClose();
       } else {
-        throw new Error('Error deleting contract');
+        throw new Error("Error deleting contract");
       }
     } catch (error) {
-      console.error('Error deleting contract:', error);
+      console.error("Error deleting contract:", error);
     }
   };
 
@@ -58,13 +63,13 @@ const DeleteContract: React.FC<DeleteContractProps> = ({ contract, onDelete, apa
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            <AlertDialogHeader fontSize="lg" fontWeight="bold" color="white">
               Delete Contract
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure you want to delete this contract? This action
-              cannot be undone.
+              Are you sure you want to delete this contract? This action cannot
+              be undone.
             </AlertDialogBody>
 
             <AlertDialogFooter>

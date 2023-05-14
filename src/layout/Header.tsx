@@ -57,7 +57,7 @@ const Header: React.FC<HeaderProps> = ({}) => {
       <Container maxW="container.xl">
         <Flex justify="space-between" alignItems="center" py="2">
           <Link as={RouterLink} to="/" _hover={{ textDecoration: "none" }}>
-            <Heading size="lg" color="white">
+            <Heading size="xl" color="white">
               A-Partner
             </Heading>
           </Link>

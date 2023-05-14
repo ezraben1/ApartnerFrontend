@@ -1,7 +1,5 @@
-// src/pages/SearcherPage.tsx
-import React from "react";
 import { Link, Outlet } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button, Heading, VStack } from "@chakra-ui/react";
 import { useUserType } from "../../utils/useUserType";
 
 const SearcherPage: React.FC = () => {
@@ -18,28 +16,31 @@ const SearcherPage: React.FC = () => {
   if (userType !== "searcher") {
     return <div>You are not a Searcher!</div>;
   }
+
   return (
-    <div className="d-flex flex-column align-items-center justify-content-center">
-      <h1 className="mb-5">Welcome to the Searcher Page</h1>
-      <div className="d-flex justify-content-center mb-5">
+    <VStack spacing={8} alignItems="center" justifyContent="center">
+      <Heading as="h1" size="2xl">
+        Welcome to the Searcher Page
+      </Heading>
+      <VStack spacing={4} alignItems="stretch">
         <Link to="/login">
-          <Button className="mx-2" variant="primary">
+          <Button colorScheme="blue" size="lg" w="full">
             Login
           </Button>
         </Link>
         <Link to="/me">
-          <Button className="mx-2" variant="primary">
+          <Button colorScheme="blue" size="lg" w="full">
             Profile
           </Button>
         </Link>
         <Link to="/searcher/search">
-          <Button className="mx-2" variant="primary">
+          <Button colorScheme="blue" size="lg" w="full">
             Search
           </Button>
         </Link>
-      </div>
+      </VStack>
       <Outlet />
-    </div>
+    </VStack>
   );
 };
 

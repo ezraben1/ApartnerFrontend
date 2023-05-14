@@ -11,6 +11,8 @@ import { Room } from "../../types";
 import api from "../../utils/api";
 import { Link } from "react-router-dom";
 import RoomThumbnail from "../../components/images/RoomThumbnail";
+import logo from "../../assets/images/logo-colorwide.png";
+import { Flex } from "@chakra-ui/react";
 
 interface HomeProps {
   currentUser: any;
@@ -40,6 +42,16 @@ const HomePage: React.FC<HomeProps> = ({}) => {
 
   return (
     <Box>
+      <Flex
+        justify="center"
+        align="center"
+        height="200px"
+        maxWidth="600"
+        mx="auto"
+      >
+        <img src={logo} alt="Logo" style={{ width: "100%", height: "auto" }} />
+      </Flex>
+
       <Heading as="h1" size="xl" textAlign="center" my={8}>
         Available Rooms
       </Heading>
@@ -79,7 +91,7 @@ const HomePage: React.FC<HomeProps> = ({}) => {
                   colorScheme="teal"
                   size="sm"
                   as={Link}
-                  to={`/test/${room.id}`}
+                  to={`/home/${room.id}`}
                 >
                   View Details
                 </Button>

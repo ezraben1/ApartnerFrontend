@@ -1,6 +1,5 @@
-import React from "react";
 import { Link, Outlet } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button, Heading, VStack } from "@chakra-ui/react";
 import { useUserType } from "../../utils/useUserType";
 
 const RenterPage: React.FC = () => {
@@ -19,32 +18,34 @@ const RenterPage: React.FC = () => {
   }
 
   return (
-    <div className="d-flex flex-column align-items-center justify-content-center">
-      <h1 className="mb-5">Welcome to the Renter Page</h1>
-      <div className="d-flex justify-content-center mb-5">
+    <VStack spacing={8} alignItems="center" justifyContent="center">
+      <Heading as="h1" size="2xl">
+        Welcome to the Renter Page
+      </Heading>
+      <VStack spacing={4} alignItems="stretch">
         <Link to="/me">
-          <Button className="mx-2" variant="primary">
+          <Button colorScheme="blue" size="lg" w="full">
             Profile
           </Button>
         </Link>
         <Link to="/renter/my-apartment">
-          <Button className="mx-2" variant="primary">
+          <Button colorScheme="blue" size="lg" w="full">
             My Apartment
           </Button>
         </Link>
         <Link to="/renter/my-bills">
-          <Button className="mx-2" variant="primary">
+          <Button colorScheme="blue" size="lg" w="full">
             My Bills
           </Button>
         </Link>
         <Link to="/renter/my-room">
-          <Button className="mx-2" variant="primary">
+          <Button colorScheme="blue" size="lg" w="full">
             My Room
           </Button>
         </Link>
-      </div>
+      </VStack>
       <Outlet />
-    </div>
+    </VStack>
   );
 };
 

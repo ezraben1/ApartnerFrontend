@@ -81,7 +81,6 @@ button {
   font-weight: var(--font-weight-bold);
   font-family: var(--font-family);
   background-color: var(--color-button-background);
-  color: var(--color-button-text);
   cursor: pointer;
   transition: border-color 0.25s;
   }
