@@ -18,7 +18,6 @@ import { Link as RouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../utils/api";
-import auth from "../utils/auth";
 import Cookies from "js-cookie";
 
 interface HeaderProps {
@@ -26,7 +25,7 @@ interface HeaderProps {
   onLoginSuccess: (token?: string) => Promise<void>; // Updated type
 }
 
-const Header: React.FC<HeaderProps> = ({ onLoginSuccess }) => {
+const Header: React.FC<HeaderProps> = ({}) => {
   const [isSmallerThanLg] = useMediaQuery("(max-width: 991px)");
   const [username, setUsername] = useState<string | null>(null);
   const navigate = useNavigate();
