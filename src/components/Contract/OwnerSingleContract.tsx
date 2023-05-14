@@ -64,6 +64,8 @@ const OwnerSingleContract: React.FC = () => {
 
   const handleUpload = async (updatedContract: Contract) => {
     setContract(updatedContract);
+    window.alert("File uploaded!");
+    window.close();
   };
 
   const handleDownload = () => {
