@@ -24,7 +24,6 @@ function Login({ onLoginSuccess }: LoginProps) {
   const [error, setError] = useState("");
   const [loggedInUser, setLoggedInUser] = useState<any>(null); // state to store logged in user
 
-  // login.tsx
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -32,14 +31,14 @@ function Login({ onLoginSuccess }: LoginProps) {
       const { data, status } = await auth.login({ username, password });
 
       if (status === 200) {
-        // if response is ok
         if (data.data && data.data.access) {
-          // check if access_token exists in the nested data
-          onLoginSuccess(data.data.access); // use the access_token in data
+          onLoginSuccess(data.data.access);
+          navigate("/");
 
-          // fetch user details and set the logged in user state
+          window.location.reload();
+
           const userResponse = await api.getUserDetails();
-          console.log("userResponse:", userResponse); // add this line to log the userResponse object
+          console.log("userResponse:", userResponse);
           if (userResponse.ok) {
             const user = await userResponse.json();
             setLoggedInUser(user);
