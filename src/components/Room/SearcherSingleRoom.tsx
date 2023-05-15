@@ -186,7 +186,7 @@ const SearcherSingleRoom = () => {
         <HStack mt={6} spacing={6}>
           <Button colorScheme="green">
             <Link
-              to={`/searcher/searcher-search/${roomId}/contracts/${roomData.contract.id}`}
+              to={`/searcher/searcher-search/${roomId}/contracts/${roomData.contract?.id}`}
             >
               Show Contract
             </Link>

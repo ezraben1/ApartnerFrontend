@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const baseURL =  import.meta.env.VITE_API_BASE_URL ||'http://localhost:8000';
 
 const api: AxiosInstance = axios.create({
   baseURL,
@@ -26,6 +26,24 @@ const post = async (url: string, data: any): Promise<Response> => {
     url,
     method: 'POST',
     data,
+  });
+
+  const headers: HeadersInit = Object.entries(response.headers).reduce((acc: { [key: string]: string }, [key, value]) => {
+    acc[key] = value;
+    return acc;
+  }, {});
+
+  return new Response(JSON.stringify(response.data), {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+};
+
+const postSign = async (url: string): Promise<Response> => {
+  const response = await api.request({
+    url,
+    method: 'POST',
   });
 
   const headers: HeadersInit = Object.entries(response.headers).reduce((acc: { [key: string]: string }, [key, value]) => {
@@ -229,6 +247,7 @@ export default {
   getBlob,
   postWithFormData,
   patchtWithFormData,
-  putWithFormData
+  putWithFormData,
+  postSign
 };
 
