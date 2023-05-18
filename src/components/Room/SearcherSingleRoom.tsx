@@ -37,29 +37,8 @@ const SearcherSingleRoom = () => {
 
   useEffect(() => {
     if (searcherID) {
-      console.log("Searcher ID:", searcherID);
     }
   }, [searcherID]);
-
-  useEffect(() => {
-    const fetchContractId = async () => {
-      try {
-        const response = await fetch(
-          `/searcher/searcher-search/${roomId}/contract/`
-        );
-        const data = await response.json();
-        if (data && data.id) {
-          setContractId(data.id);
-        }
-      } catch (error) {
-        console.error("Error fetching contract ID:", error);
-      }
-    };
-
-    if (roomData) {
-      fetchContractId();
-    }
-  }, [roomData, roomId]);
 
   if (status === "loading") {
     return <Text>Loading...</Text>;
@@ -72,7 +51,6 @@ const SearcherSingleRoom = () => {
   if (!roomData) {
     return <Text>No data available.</Text>;
   }
-  console.log(roomData);
 
   const { description, size, price_per_month, window, images, apartment } =
     roomData;
@@ -190,13 +168,6 @@ const SearcherSingleRoom = () => {
             >
               Show Contract
             </Link>
-          </Button>
-
-          <Button
-            colorScheme="teal"
-            onClick={() => console.log("Sign Contract")}
-          >
-            Sign Contract
           </Button>
         </HStack>
 
