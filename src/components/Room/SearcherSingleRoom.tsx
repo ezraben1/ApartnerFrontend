@@ -19,7 +19,7 @@ const SearcherSingleRoom = () => {
   const { roomId } = useParams();
   const [searcherID, setSearcherID] = useState<string | null>(null);
   const [, setUserLoading] = useState(true);
-  const [, setContractId] = useState<number | null>(null);
+  const [] = useState<number | null>(null);
 
   const [roomData, status] = useAuthorizedData<Room | null>(
     `/searcher/searcher-search/${roomId}/`
