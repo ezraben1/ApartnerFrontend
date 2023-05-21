@@ -4,7 +4,7 @@ import { useAuthorizedData } from "../../utils/useAuthorizedData";
 import { useEffect, useState } from "react";
 import { Container, Card, ListGroup, ListGroupItem } from "react-bootstrap";
 import { handleDownloadFile } from "../images/handleDownloadFile";
-import { Button } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import api from "../../utils/api";
 
 const SearcherSingleContract: React.FC = () => {
@@ -17,10 +17,11 @@ const SearcherSingleContract: React.FC = () => {
     `/searcher/searcher-search/${roomId}/contract/${contractId}/`
   );
   const [helloSignInitialized, setHelloSignInitialized] = useState(false);
-  const [, setSignedUrl] = useState<string | null>(null);
+  const toast = useToast();
 
   useEffect(() => {
     if ((window as any).HelloSign) {
+      // Initialize HelloSign SDK
       (window as any).HelloSign.init("b0e3cae5b0eaa2ab368de095fe5ea46a");
       setHelloSignInitialized(true);
     } else {
@@ -29,6 +30,7 @@ const SearcherSingleContract: React.FC = () => {
         "https://s3.amazonaws.com/cdn.hellosign.com/public/js/hellosign-embedded.LATEST.min.js";
       script.async = true;
       script.onload = () => {
+        // Initialize HelloSign SDK
         (window as any).HelloSign.init("b0e3cae5b0eaa2ab368de095fe5ea46a");
         setHelloSignInitialized(true);
       };
@@ -39,30 +41,7 @@ const SearcherSingleContract: React.FC = () => {
     }
   }, []);
 
-  const fetchSignedDocumentUrl = async (
-    signatureId: string
-  ): Promise<string | null> => {
-    try {
-      const response = await fetch(
-        `https://api.hellosign.com/v3/signature_request/${signatureId}`,
-        {
-          headers: {
-            Authorization: `Basic ${btoa(
-              "c35b8f89b102910d72f6c05bf78097f62e8e9e2f28c164a587ba0ab331bca22d:"
-            )}`,
-          },
-        }
-      );
-
-      const data = await response.json();
-      const signedDocumentUrl = data.signature_request.signatures[0].signed_url;
-      console.log("url:", signedDocumentUrl);
-      return signedDocumentUrl;
-    } catch (error) {
-      console.error("Failed to fetch signed document URL: ", error);
-      return null;
-    }
-  };
+  let attempts = 0;
 
   const openSignatureForm = async () => {
     try {
@@ -71,74 +50,99 @@ const SearcherSingleContract: React.FC = () => {
       );
 
       const data = await response.json();
-
       const signUrl = data.sign_url;
 
       if (!signUrl) {
         console.error("Signing URL is missing in the response");
         return;
       }
+      alert("Keep this page open until success message appears.");
 
       if (helloSignInitialized) {
-        console.log("helloSignInitialized:");
-
-        console.log((window as any).HelloSign);
-
         (window as any).HelloSign.open({
           url: signUrl,
           clientId: "b0e3cae5b0eaa2ab368de095fe5ea46a",
           skipDomainVerification: true,
           allowCancel: true,
           debug: true,
-          onMessage: async (event: any) => {
-            console.log("Received event:", event);
-            console.log("Event type:", event.event_type);
-            if (
-              event.event_type === "signature_request_signed" ||
-              event.event_type === "signature_request_all_signed"
-            ) {
-              console.log("Document signed! Event data:", event);
-
-              // The signatureRequestId should be in the event object
-              const signatureRequestId = event.signature_id;
-              console.log("signatureRequestId:", signatureRequestId);
-
-              // Delay fetching the signed document URL
-              setTimeout(async () => {
-                // Fetch the signed document URL
-                const signedDocumentUrl = await fetchSignedDocumentUrl(
-                  signatureRequestId
-                );
-                setSignedUrl(signedDocumentUrl);
-
-                // Call the backend API to update the contract's file field
-                let formData = new FormData();
-                formData.append("signature_request_id", signatureRequestId);
-
-                try {
-                  const response = await api.patchWithFormData(
-                    // Corrected this line
-                    `/searcher/searcher-search/${roomId}/contract/${contractId}/update-signed-contract`,
-                    formData
-                  );
-                  const data = await response.json();
-                  console.log(data); // Process the response data as needed
-                } catch (error) {
-                  console.error("Failed to update the contract: ", error);
-                }
-              }, 100000); // Delay execution for 10 seconds. Adjust this value as needed.
-            }
-          },
-
-          onClose: () => {
-            console.log("User closed the signature request.");
-          },
         });
+
+        // After the form is opened, start the status polling after 30 seconds
+        setTimeout(pollForSignatureStatus, 30000);
       } else {
         console.error("HelloSign SDK not yet initialized");
       }
     } catch (error) {
       console.error("Failed to get signature request ID: ", error);
+    }
+  };
+
+  const uploadSignedDocument = async () => {
+    // Obtain the CSRF token. This is an example of fetching it from a cookie.
+    // You will need to replace this with your method of fetching the CSRF token.
+    const csrftoken = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("csrftoken"))
+      ?.split("=")[1];
+
+    try {
+      const response = await api.patch(
+        `/searcher/searcher-search/${roomId}/contract/${contractId}/upload-signed-document`,
+        {},
+        {
+          headers: {
+            // Include the CSRF token in the 'X-CSRFToken' header
+            "X-CSRFToken": csrftoken,
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Upload successful
+        console.log("Signed document uploaded successfully");
+        toast({
+          title: "Signing uploaded successfully!",
+          status: "success",
+          duration: 10000,
+          isClosable: true,
+        });
+      } else {
+        console.error("Failed to upload signed document");
+        // Handle the error or display an error message to the user
+      }
+    } catch (error) {
+      console.error("Error occurred while uploading signed document: ", error);
+      // Handle the error or display an error message to the user
+    }
+  };
+
+  const pollForSignatureStatus = async () => {
+    if (attempts >= 20) {
+      return;
+    }
+    console.log(
+      "attempt:",
+      attempts,
+      "contract:",
+      contract?.signature_request_id
+    );
+
+    attempts += 1;
+    if (contract?.signature_request_id) {
+      try {
+        const response = await api.get(
+          `/searcher/searcher-search/${roomId}/contract/${contractId}/signature-status/${contract?.signature_request_id}/`
+        );
+        const data = await response.json();
+        console.log("status data:", data.status);
+        if (data.status === "signed") {
+          uploadSignedDocument();
+        } else if (attempts < 20) {
+          setTimeout(pollForSignatureStatus, 10);
+        }
+      } catch (error) {
+        console.error("Failed to fetch signature status: ", error);
+      }
     }
   };
 

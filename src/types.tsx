@@ -83,6 +83,7 @@ export interface Contract {
   terms_and_conditions: string | null;
   file: File | null;
   [key: string]: any;
+  signature_request_id: string;
 }
 
 export interface Bill {
