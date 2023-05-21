@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { Container, Card, ListGroup, ListGroupItem } from "react-bootstrap";
 import { handleDownloadFile } from "../images/handleDownloadFile";
 import { Button } from "@chakra-ui/react";
-import HelloSign from "hellosign-embedded";
 import api from "../../utils/api";
 
 const SearcherSingleContract: React.FC = () => {
@@ -17,27 +16,60 @@ const SearcherSingleContract: React.FC = () => {
   const [contractData, status] = useAuthorizedData<Contract>(
     `/searcher/searcher-search/${roomId}/contract/${contractId}/`
   );
+  const [helloSignInitialized, setHelloSignInitialized] = useState(false);
 
-  const client = new HelloSign();
+  useEffect(() => {
+    if ((window as any).HelloSign) {
+      (window as any).HelloSign.init("b0e3cae5b0eaa2ab368de095fe5ea46a");
+      setHelloSignInitialized(true);
+    } else {
+      const script = document.createElement("script");
+      script.src =
+        "https://s3.amazonaws.com/cdn.hellosign.com/public/js/hellosign-embedded.LATEST.min.js";
+      script.async = true;
+      script.onload = () => {
+        (window as any).HelloSign.init("b0e3cae5b0eaa2ab368de095fe5ea46a");
+        setHelloSignInitialized(true);
+      };
+      document.body.appendChild(script);
+    }
+  }, []);
 
   const openSignatureForm = async () => {
     try {
-      // Make a request to the backend to get the signature_request_id
       const response = await api.postSign(
         `/searcher/searcher-search/${roomId}/contract/${contractId}/send-for-signing`
       );
 
-      // Parse the response body as JSON
-      const responseBody = await response.json();
+      const data = await response.json();
+      console.log(data); // Add this line to log the response data
 
-      // Extract the signature_request_id from the response
-      const signatureRequestId = responseBody.signature_request_id;
+      const signUrl = data.sign_url; // OR data.embedded.sign_url
+      console.log(signUrl);
 
-      // Open the signature form with the signature_request_id
-      client.open(signatureRequestId, {
-        clientId: "b0e3cae5b0eaa2ab368de095fe5ea46a",
-        skipDomainVerification: true,
-      });
+      if (!signUrl) {
+        console.error("Signing URL is missing in the response");
+        return;
+      }
+
+      if (helloSignInitialized) {
+        (window as any).HelloSign.open(signUrl, {
+          clientId: "b0e3cae5b0eaa2ab368de095fe5ea46a",
+          skipDomainVerification: true,
+          allowCancel: true,
+          debug: true,
+          onMessage: (event: any) => {
+            if (event.event === "signature_request_signed") {
+              console.log("Document signed! Event data:", event);
+            }
+          },
+          onClose: () => {
+            console.log("User closed the signature request.");
+          },
+        });
+      } else {
+        console.error("HelloSign SDK not yet initialized");
+      }
     } catch (error) {
       console.error("Failed to get signature request ID: ", error);
     }
