@@ -124,11 +124,12 @@ const SearcherSingleContract: React.FC = () => {
     attempts += 1;
 
     // Refetch the contract before checking signature_request_id
+    let newContract = null;
     try {
       const response = await api.get(
         `/searcher/searcher-search/${roomId}/contract/${contractId}`
       );
-      const newContract = await response.json();
+      newContract = await response.json();
       setContract(newContract); // Use setContract to update the contract state
     } catch (error) {
       console.error("Failed to fetch contract: ", error);
@@ -138,18 +139,18 @@ const SearcherSingleContract: React.FC = () => {
       "attempt:",
       attempts,
       "contract:",
-      contract?.signature_request_id
+      newContract?.signature_request_id
     );
 
     // If the signature_request_id is null, retry after some delay
-    if (!contract?.signature_request_id) {
+    if (!newContract?.signature_request_id) {
       setTimeout(pollForSignatureStatus, 10 * 1000); // 10 seconds delay
       return;
     }
 
     try {
       const response = await api.get(
-        `/searcher/searcher-search/${roomId}/contract/${contractId}/signature-status/${contract?.signature_request_id}/`
+        `/searcher/searcher-search/${roomId}/contract/${contractId}/signature-status/${newContract?.signature_request_id}/`
       );
       const data = await response.json();
       console.log("status data:", data.status);
