@@ -128,21 +128,26 @@ const SearcherSingleContract: React.FC = () => {
     );
 
     attempts += 1;
-    if (contract?.signature_request_id) {
-      try {
-        const response = await api.get(
-          `/searcher/searcher-search/${roomId}/contract/${contractId}/signature-status/${contract?.signature_request_id}/`
-        );
-        const data = await response.json();
-        console.log("status data:", data.status);
-        if (data.status === "signed") {
-          uploadSignedDocument();
-        } else if (attempts < 20) {
-          setTimeout(pollForSignatureStatus, 10);
-        }
-      } catch (error) {
-        console.error("Failed to fetch signature status: ", error);
+
+    // If the signature_request_id is null, retry after some delay
+    if (!contract?.signature_request_id) {
+      setTimeout(pollForSignatureStatus, 10 * 1000); // 10 seconds delay
+      return;
+    }
+
+    try {
+      const response = await api.get(
+        `/searcher/searcher-search/${roomId}/contract/${contractId}/signature-status/${contract?.signature_request_id}/`
+      );
+      const data = await response.json();
+      console.log("status data:", data.status);
+      if (data.status === "signed") {
+        uploadSignedDocument();
+      } else if (attempts < 20) {
+        setTimeout(pollForSignatureStatus, 10 * 1000); // 10 seconds delay
       }
+    } catch (error) {
+      console.error("Failed to fetch signature status: ", error);
     }
   };
 
