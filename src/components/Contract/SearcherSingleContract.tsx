@@ -17,6 +17,7 @@ const SearcherSingleContract: React.FC = () => {
     `/searcher/searcher-search/${roomId}/contract/${contractId}/`
   );
   const [helloSignInitialized, setHelloSignInitialized] = useState(false);
+  const [signedUrl, setSignedUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if ((window as any).HelloSign) {
@@ -28,12 +29,41 @@ const SearcherSingleContract: React.FC = () => {
         "https://s3.amazonaws.com/cdn.hellosign.com/public/js/hellosign-embedded.LATEST.min.js";
       script.async = true;
       script.onload = () => {
+        console.log("HelloSign script loaded successfully.");
         (window as any).HelloSign.init("b0e3cae5b0eaa2ab368de095fe5ea46a");
         setHelloSignInitialized(true);
+      };
+      script.onerror = () => {
+        console.error("Failed to load HelloSign script.");
       };
       document.body.appendChild(script);
     }
   }, []);
+
+  const fetchSignedDocumentUrl = async (
+    signatureId: string
+  ): Promise<string | null> => {
+    try {
+      const response = await fetch(
+        `https://api.hellosign.com/v3/signature_request/${signatureId}`,
+        {
+          headers: {
+            Authorization: `Basic ${btoa(
+              "c35b8f89b102910d72f6c05bf78097f62e8e9e2f28c164a587ba0ab331bca22d:"
+            )}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      const signedDocumentUrl = data.signature_request.signatures[0].signed_url;
+      console.log("url:", signedDocumentUrl);
+      return signedDocumentUrl;
+    } catch (error) {
+      console.error("Failed to fetch signed document URL: ", error);
+      return null;
+    }
+  };
 
   const openSignatureForm = async () => {
     try {
@@ -42,9 +72,9 @@ const SearcherSingleContract: React.FC = () => {
       );
 
       const data = await response.json();
-      console.log(data); // Add this line to log the response data
+      console.log(data);
 
-      const signUrl = data.sign_url; // OR data.embedded.sign_url
+      const signUrl = data.sign_url;
       console.log(signUrl);
 
       if (!signUrl) {
@@ -53,16 +83,30 @@ const SearcherSingleContract: React.FC = () => {
       }
 
       if (helloSignInitialized) {
-        (window as any).HelloSign.open(signUrl, {
+        console.log("signUrl is", signUrl);
+
+        console.log((window as any).HelloSign); // Log HelloSign object here
+        (window as any).HelloSign.open({
+          url: signUrl,
           clientId: "b0e3cae5b0eaa2ab368de095fe5ea46a",
           skipDomainVerification: true,
           allowCancel: true,
           debug: true,
-          onMessage: (event: any) => {
+          onMessage: async (event: any) => {
             if (event.event === "signature_request_signed") {
               console.log("Document signed! Event data:", event);
+
+              // The signatureRequestId should be in the event object
+              const signatureRequestId = event.signature_id;
+
+              // Fetch the signed document URL
+              const signedDocumentUrl = await fetchSignedDocumentUrl(
+                signatureRequestId
+              );
+              setSignedUrl(signedDocumentUrl);
             }
           },
+
           onClose: () => {
             console.log("User closed the signature request.");
           },
