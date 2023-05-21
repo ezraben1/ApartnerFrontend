@@ -29,7 +29,6 @@ const SearcherSingleContract: React.FC = () => {
         "https://s3.amazonaws.com/cdn.hellosign.com/public/js/hellosign-embedded.LATEST.min.js";
       script.async = true;
       script.onload = () => {
-        console.log("HelloSign script loaded successfully.");
         (window as any).HelloSign.init("b0e3cae5b0eaa2ab368de095fe5ea46a");
         setHelloSignInitialized(true);
       };
@@ -72,10 +71,8 @@ const SearcherSingleContract: React.FC = () => {
       );
 
       const data = await response.json();
-      console.log(data);
 
       const signUrl = data.sign_url;
-      console.log(signUrl);
 
       if (!signUrl) {
         console.error("Signing URL is missing in the response");
@@ -83,9 +80,10 @@ const SearcherSingleContract: React.FC = () => {
       }
 
       if (helloSignInitialized) {
-        console.log("signUrl is", signUrl);
+        console.log("helloSignInitialized:");
 
-        console.log((window as any).HelloSign); // Log HelloSign object here
+        console.log((window as any).HelloSign);
+
         (window as any).HelloSign.open({
           url: signUrl,
           clientId: "b0e3cae5b0eaa2ab368de095fe5ea46a",
@@ -93,17 +91,42 @@ const SearcherSingleContract: React.FC = () => {
           allowCancel: true,
           debug: true,
           onMessage: async (event: any) => {
-            if (event.event === "signature_request_signed") {
+            console.log("Received event:", event);
+            console.log("Event type:", event.event_type);
+            if (
+              event.event_type === "signature_request_signed" ||
+              event.event_type === "signature_request_all_signed"
+            ) {
               console.log("Document signed! Event data:", event);
 
               // The signatureRequestId should be in the event object
               const signatureRequestId = event.signature_id;
+              console.log("signatureRequestId:", signatureRequestId);
 
-              // Fetch the signed document URL
-              const signedDocumentUrl = await fetchSignedDocumentUrl(
-                signatureRequestId
-              );
-              setSignedUrl(signedDocumentUrl);
+              // Delay fetching the signed document URL
+              setTimeout(async () => {
+                // Fetch the signed document URL
+                const signedDocumentUrl = await fetchSignedDocumentUrl(
+                  signatureRequestId
+                );
+                setSignedUrl(signedDocumentUrl);
+
+                // Call the backend API to update the contract's file field
+                let formData = new FormData();
+                formData.append("signature_request_id", signatureRequestId);
+
+                try {
+                  const response = await api.patchWithFormData(
+                    // Corrected this line
+                    `/searcher/searcher-search/${roomId}/contract/${contractId}/update-signed-contract`,
+                    formData
+                  );
+                  const data = await response.json();
+                  console.log(data); // Process the response data as needed
+                } catch (error) {
+                  console.error("Failed to update the contract: ", error);
+                }
+              }, 100000); // Delay execution for 10 seconds. Adjust this value as needed.
             }
           },
 
