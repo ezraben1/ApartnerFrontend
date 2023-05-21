@@ -17,7 +17,7 @@ const SearcherSingleContract: React.FC = () => {
     `/searcher/searcher-search/${roomId}/contract/${contractId}/`
   );
   const [helloSignInitialized, setHelloSignInitialized] = useState(false);
-  const [signedUrl, setSignedUrl] = useState<string | null>(null);
+  const [, setSignedUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if ((window as any).HelloSign) {
