@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import api from "../utils/api";
 import Cookies from "js-cookie";
 import { useUserType } from "../utils/useUserType";
+import InquiryNavLink from "./InquiryNavLink";
 
 interface HeaderProps {
   currentUser: any;
@@ -64,6 +65,7 @@ const Header: React.FC<HeaderProps> = ({}) => {
           <Spacer />
           {isSmallerThanLg ? (
             <Menu>
+              <InquiryNavLink />
               <MenuButton
                 as={Button}
                 rightIcon={<ChevronDownIcon />}
@@ -86,6 +88,9 @@ const Header: React.FC<HeaderProps> = ({}) => {
                     </MenuItem>
                     <MenuItem as={RouterLink} to="/owner/my-contracts">
                       My Contracts
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to="/owner/contract-suggestions">
+                      Contract Suggestions
                     </MenuItem>
                   </>
                 )}
@@ -182,7 +187,7 @@ const NavLinks = () => {
 
   return (
     <Flex as="nav" alignItems="center" justifyContent="space-between" w="100%">
-      <NavLink to="/inquiries">My Inquiries</NavLink>
+      <InquiryNavLink></InquiryNavLink>
       <NavLink to="/me">Me</NavLink>
 
       {userType === "owner" && (
@@ -216,6 +221,9 @@ const NavLinks = () => {
             </MenuItem>
             <MenuItem as={RouterLink} to="/owner/my-contracts">
               My Contracts
+            </MenuItem>
+            <MenuItem as={RouterLink} to="/owner/contract-suggestions">
+              Contract Suggestions
             </MenuItem>
           </MenuList>
         </Menu>

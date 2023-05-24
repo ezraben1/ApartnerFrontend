@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import InquiryFilters from "./InquiryFilters";
-import InquiryList from "./InquiryList";
 import Pagination from "../../layout/Pagination";
 import { useAuthorizedData } from "../../utils/useAuthorizedData";
 import { useUserType } from "../../utils/useUserType";
@@ -78,7 +77,6 @@ const InquirySearch: React.FC = () => {
   return (
     <div>
       <InquiryFilters onFilterSubmit={handleFilterSubmit} />
-      <InquiryList inquiries={data.results} />
       <Pagination
         next={data.next ?? null}
         previous={data.previous ?? null}

@@ -21,7 +21,10 @@ const SingleInquiry: React.FC = () => {
       const response = await api.get(`/core/inquiries/${id}/`);
       const data = await response.json();
       setInquiry(data);
-      // Also fetch replies here
+      if (!data.read) {
+        await api.patch(`/core/inquiries/${id}/`, { read: true });
+      }
+
       const repliesResponse = await api.get(`/core/inquiries/${id}/replies/`);
       const repliesData = await repliesResponse.json();
       setReplies(repliesData);
@@ -66,10 +69,8 @@ const SingleInquiry: React.FC = () => {
       };
       console.log("Sending request data:", requestData);
       try {
-        // Add the API call to create a reply
         await api.post(`/core/inquiries/${id}/replies/`, requestData);
 
-        // Refresh the inquiry and replies data
         getInquiry();
         setReply("");
       } catch (error) {
@@ -82,8 +83,8 @@ const SingleInquiry: React.FC = () => {
 
   const closeInquiry = async () => {
     try {
-      await api.post(`/core/inquiries/${id}/close/`, {}); // Pass an empty object as the second argument
-      getInquiry(); // Refresh the inquiry data to display the updated status
+      await api.post(`/core/inquiries/${id}/close/`, {});
+      getInquiry();
     } catch (error) {
       console.error("Error closing inquiry:", error);
     }

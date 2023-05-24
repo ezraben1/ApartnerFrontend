@@ -4,7 +4,15 @@ import { Bill } from "../../types";
 import api from "../../utils/api";
 import DeleteBill from "./DeleteBill";
 import AddBill from "./AddBill";
-import { VStack, Heading, Text, Box, List, ListItem } from "@chakra-ui/react";
+import {
+  VStack,
+  Heading,
+  Text,
+  Box,
+  List,
+  ListItem,
+  Badge,
+} from "@chakra-ui/react";
 
 const BillsList: React.FC = () => {
   const { apartmentId } = useParams<{ apartmentId?: string }>();
@@ -54,6 +62,15 @@ const BillsList: React.FC = () => {
                   <Heading size="sm">{bill.bill_type}</Heading>
                   <Text>Amount: ${bill.amount}</Text>
                   <Text>Date: {bill.date}</Text>
+                  <Badge
+                    colorScheme={bill.paid ? "green" : "red"}
+                    variant="subtle"
+                    px="2"
+                    py="1"
+                    rounded="md"
+                  >
+                    {bill.paid ? "Paid" : "Not Paid"}
+                  </Badge>
                   <DeleteBill
                     apartmentId={apartmentId || ""}
                     billId={bill.id.toString()}

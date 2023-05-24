@@ -94,3 +94,10 @@ button {
   outline: 4px auto -webkit-focus-ring-color;
   }
  
+  .css-9kj88y {
+  
+    background: rgb(10, 180, 4);
+    color: white;
+    margin-top: var(--chakra-space-4);
+  }
+  

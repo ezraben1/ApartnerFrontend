@@ -320,7 +320,13 @@ const SingleApartment: React.FC = () => {
         </Box>
 
         <Flex justify="space-between" align="center">
-          <AddRoomForm apartmentId={apartment.id} />
+          <AddRoomForm
+            apartmentId={apartment.id}
+            isOpen={false}
+            onClose={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
           <Flex>
             <Link
               to={`/owner/my-apartments/${apartment.id}/contracts?apartmentId=${apartment.id}`}

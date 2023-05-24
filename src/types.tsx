@@ -85,7 +85,13 @@ export interface Contract {
   [key: string]: any;
   signature_request_id: string;
 }
-
+export interface SuggestedContract {
+  id: number;
+  contract: number;
+  suggested_rent_amount: number;
+  price_suggested_by: number | null;
+  notes: string | null;
+}
 export interface Bill {
   id: number;
   apartment: Apartment;
@@ -150,6 +156,7 @@ export interface Inquiry {
   message: string;
   created_at: string;
   image: string | null;
+  read: boolean;
 }
 
 export interface Reply {

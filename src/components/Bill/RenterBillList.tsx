@@ -11,6 +11,7 @@ import {
   ListItem,
   Input,
   Select,
+  Badge,
 } from "@chakra-ui/react";
 import { useUserType } from "../../utils/useUserType";
 
@@ -107,6 +108,15 @@ const RetnerBillsList: React.FC = () => {
                     <Heading size="sm">{bill.bill_type}</Heading>
                     <Text>Amount: ${bill.amount}</Text>
                     <Text>Date: ${bill.date}</Text>
+                    <Badge
+                      colorScheme={bill.paid ? "green" : "red"}
+                      variant="subtle"
+                      px="2"
+                      py="1"
+                      rounded="md"
+                    >
+                      {bill.paid ? "Paid" : "Not Paid"}
+                    </Badge>
                   </VStack>
                 </ListItem>
               </Link>

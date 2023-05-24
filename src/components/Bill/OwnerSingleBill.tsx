@@ -82,15 +82,17 @@ const SingleBill: React.FC = () => {
               {bill.date}
             </StatNumber>
           </Stat>
+          <Stat>
+            <StatLabel fontSize="md" textAlign="center">
+              Status:
+            </StatLabel>
+            <StatNumber fontSize="sm" textAlign="center">
+              {bill.paid ? "Paid" : "Not Paid"}
+            </StatNumber>
+          </Stat>
         </StatGroup>
 
         <Stack direction={{ base: "column", md: "row" }} spacing={4} mt={6}>
-          <DeleteBill apartmentId={apartmentId || ""} billId={billId || ""} />
-          <UploadFileForm
-            onUpload={handleUpload}
-            accept=".pdf"
-            apiEndpoint={`/owner/owner-apartments/${apartmentId}/bills/${billId}/`}
-          />
           <UpdateBillForm
             apartmentId={apartmentId || ""}
             billId={billId || ""}
@@ -99,6 +101,11 @@ const SingleBill: React.FC = () => {
               console.log("Bill updated:", updatedBill);
               // handle the update
             }}
+          />
+          <UploadFileForm
+            onUpload={handleUpload}
+            accept=".pdf"
+            apiEndpoint={`/owner/owner-apartments/${apartmentId}/bills/${billId}/`}
           />
           {bill.file ? (
             <Button colorScheme="blue" onClick={handleDownload}>
@@ -115,6 +122,7 @@ const SingleBill: React.FC = () => {
               setBill({ ...bill, file: null });
             }}
           />
+          <DeleteBill apartmentId={apartmentId || ""} billId={billId || ""} />
         </Stack>
       </VStack>
     </Box>

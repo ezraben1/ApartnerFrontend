@@ -15,6 +15,7 @@ import {
   StatGroup,
 } from "@chakra-ui/react";
 import { handleDownloadFile } from "../images/handleDownloadFile";
+import PayBill from "./Paybill";
 
 const RenterSingleBill: React.FC = () => {
   const { billId } = useParams<{
@@ -70,6 +71,14 @@ const RenterSingleBill: React.FC = () => {
               {bill.date}
             </StatNumber>
           </Stat>
+          <Stat>
+            <StatLabel fontSize="md" textAlign="center">
+              Status:
+            </StatLabel>
+            <StatNumber fontSize="sm" textAlign="center">
+              {bill.paid ? "Paid" : "Not Paid"}
+            </StatNumber>
+          </Stat>
         </StatGroup>
 
         <Stack direction={{ base: "column", md: "row" }} spacing={4} mt={6}>
@@ -80,6 +89,7 @@ const RenterSingleBill: React.FC = () => {
           ) : (
             <Text>No file uploaded</Text>
           )}
+          {billId && <PayBill billId={billId} fetchBill={fetchBill} />}
         </Stack>
       </VStack>
     </Box>

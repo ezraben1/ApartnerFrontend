@@ -6,6 +6,7 @@ import { Container, Card, ListGroup, ListGroupItem } from "react-bootstrap";
 import { handleDownloadFile } from "../images/handleDownloadFile";
 import { Button, useToast } from "@chakra-ui/react";
 import api from "../../utils/api";
+import SubmitSuggestedContractForm from "./SubmitSuggestedContractForm";
 
 const SearcherSingleContract: React.FC = () => {
   const { roomId, contractId } = useParams<{
@@ -212,6 +213,9 @@ const SearcherSingleContract: React.FC = () => {
       <Button colorScheme="blue" onClick={openSignatureForm}>
         Sign Contract
       </Button>
+      {roomId && contractId && (
+        <SubmitSuggestedContractForm roomId={roomId} contractId={contractId} />
+      )}
     </Container>
   );
 };
