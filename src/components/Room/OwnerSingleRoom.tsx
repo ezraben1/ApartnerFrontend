@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { Room, CustomUser, Contract, RoomImage } from "../../types";
-import { useParams, Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   Box,
   Heading,
   VStack,
   Text,
-  Button,
   HStack,
   Input,
   Flex,
@@ -14,26 +13,34 @@ import {
   Image,
   InputGroup,
   InputRightElement,
-  StatGroup,
   StatLabel,
   StatNumber,
   Stat,
+  Icon,
+  SimpleGrid,
+  Stack,
+  Badge,
+  Button,
 } from "@chakra-ui/react";
-import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 
 import UpdateRoomForm from "./UpdateRoomForm";
 import DeleteRoom from "./DeleteRoom";
 import { useNavigate } from "react-router-dom";
 import AddContract from "../Contract/AddContract";
 import api from "../../utils/api";
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { deleteImage } from "../images/imageUtils";
+import { Carousel } from "react-bootstrap";
+import {
+  MdAcUnit,
+  MdOutlineApartment,
+  MdOutlineHouseSiding,
+} from "react-icons/md";
 
 const OwnerSingleRoom: React.FC = () => {
   const { id = "" } = useParams<{ id: string }>();
   const [room, setRoom] = useState<Room | null>(null);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [renter, setRenter] = useState<CustomUser | null>(null);
+  const [, setRenter] = useState<CustomUser | null>(null);
   const [apartmentId, setApartmentId] = useState<number>(0);
   const [, setLoading] = useState<boolean>(true);
 
@@ -139,20 +146,6 @@ const OwnerSingleRoom: React.FC = () => {
     ),
   }));
 
-  const handleImageNext = () => {
-    if (imageItems) {
-      setSelectedImageIndex((prevIndex) => (prevIndex + 1) % imageItems.length);
-    }
-  };
-
-  const handleImagePrev = () => {
-    if (imageItems) {
-      setSelectedImageIndex(
-        (prevIndex) => (prevIndex - 1 + imageItems.length) % imageItems.length
-      );
-    }
-  };
-
   if (status === "loading") {
     return <div>Loading...</div>;
   }
@@ -162,114 +155,140 @@ const OwnerSingleRoom: React.FC = () => {
   }
 
   return (
-    <Box bg="white" borderRadius="md" boxShadow="xl" p={8}>
-      <Heading as="h1" size="xl" textAlign="center" mb={8}>
-        Room #{room.id}
-      </Heading>
-
-      <Flex align="center" justify="center" mb={4}>
-        {room.images && room.images.length > 0 && (
-          <>
-            <IconButton
-              aria-label="Previous image"
-              icon={<ChevronLeftIcon />}
-              onClick={handleImagePrev}
-              isDisabled={room.images.length <= 1}
-              colorScheme="gray"
-              variant="outline"
-            />
-            {room.images.map((image, index) => (
-              <Box
-                key={index}
-                borderRadius="sm"
-                overflow="hidden"
-                display={selectedImageIndex === index ? "block" : "none"}
-              >
-                <Image
-                  src={image.image}
-                  alt={`Room ${room.id} image ${index}`}
-                  objectFit="contain"
-                  boxSize={{ base: "350px", md: "lg", lg: "xl" }}
-                />
-              </Box>
-            ))}
-            <IconButton
-              aria-label="Next image"
-              icon={<ChevronRightIcon />}
-              onClick={handleImageNext}
-              isDisabled={room.images.length <= 1}
-              colorScheme="gray"
-              variant="outline"
-            />
-            <IconButton
-              aria-label="Delete image"
-              icon={<DeleteIcon />}
-              onClick={() =>
-                handleDeleteImage(room.images[selectedImageIndex].id)
-              }
-              colorScheme="red"
-              variant="outline"
-              ml={2}
-            />
-          </>
-        )}
+    <Box
+      maxW="1000px"
+      mx="auto"
+      p="6"
+      bg="white"
+      borderRadius="lg"
+      boxShadow="xl"
+    >
+      <Flex
+        justify="center"
+        align="center"
+        borderBottom="1px"
+        borderColor="gray.200"
+        pb="4"
+      >
+        <Heading size="xl" color="teal.500">
+          Room {room.id}
+        </Heading>
       </Flex>
-      <VStack spacing={4} align="start" width="100%">
-        <StatGroup width="100%" justifyContent="space-around" mt={4}>
-          <Text fontSize="lg" fontWeight="bold" mb={4}>
-            Description
+      <Flex justify="center" align="center" width="100%">
+        <Carousel>
+          {imageItems &&
+            imageItems.map((imageItem, index) => (
+              <Carousel.Item key={index}>
+                <Image
+                  src={imageItem.original}
+                  alt={imageItem.original}
+                  borderRadius="lg"
+                  boxShadow="md"
+                />
+              </Carousel.Item>
+            ))}
+        </Carousel>
+      </Flex>
+
+      <VStack align="stretch" spacing={6} mt={4}>
+        <Box bg="gray.100" p={4} borderRadius="md">
+          <Heading size="lg" mb={2} color="teal.400">
+            <Icon as={MdOutlineApartment} color="teal.400" /> Room Details
+          </Heading>
+          <SimpleGrid columns={2} spacing={4}>
+            <Stack>
+              <Text fontSize="md" color="gray.600">
+                <Icon as={MdOutlineHouseSiding} color="teal.300" /> Size
+              </Text>
+              <Text fontSize="lg" fontWeight="bold">
+                {room.size} sqm
+              </Text>
+            </Stack>
+            <Stack>
+              <Text fontSize="md" color="gray.600">
+                <Icon as={MdAcUnit} color="teal.300" /> Has window
+              </Text>
+              <Badge
+                variant={room.window ? "solid" : "outline"}
+                colorScheme={room.window ? "green" : "red"}
+              >
+                {room.window ? "Yes" : "No"}
+              </Badge>
+            </Stack>
+            <Stat>
+              <StatLabel fontSize="md" color="gray.600">
+                Price per month
+              </StatLabel>
+              <StatNumber fontSize="lg" fontWeight="bold">
+                ${room.price_per_month}
+              </StatNumber>
+            </Stat>
+          </SimpleGrid>
+          {room.contract ? (
+            <Box>
+              <Text>
+                <strong>Contract ID:</strong> {room.contract.id}
+              </Text>
+              <Link
+                to={`/owner/my-apartments/${apartmentId}/room/${room.id}/contracts/${room.contract.id}`}
+              >
+                <Button colorScheme="blue">Room Contract</Button>
+              </Link>
+            </Box>
+          ) : (
+            <Text>No contract available for this room.</Text>
+          )}
+
+          {room.renter ? (
+            <Box>
+              <Text>
+                <strong>Renter name:</strong> {room.renter.first_name}{" "}
+                {room.renter.last_name}
+              </Text>
+              <Text>
+                <strong>email:</strong> {room.renter.email}
+              </Text>
+              <Image
+                src={room.renter.avatar}
+                alt="Renter's avatar"
+                width="50px"
+                height="50px"
+              />
+            </Box>
+          ) : (
+            <Text>No renter assigned to this room.</Text>
+          )}
+        </Box>
+        <Flex direction="column" alignItems="flex-start">
+          <Text fontSize="lg" fontWeight="bold" mb={2} color="teal.400">
+            Upload Images:
           </Text>
-          <Text textAlign="center">{room.description}</Text>
-        </StatGroup>
-
-        <StatGroup width="100%" justifyContent="space-around" mt={4}>
-          <Stat>
-            <StatLabel fontSize="md">Size</StatLabel>
-            <StatNumber fontSize="sm">{room.size} sqm</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel fontSize="md">Price per month</StatLabel>
-            <StatNumber fontSize="sm">${room.price_per_month}</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel fontSize="md">Has window</StatLabel>
-            <StatNumber fontSize="sm">{room.window ? "Yes" : "No"}</StatNumber>
-          </Stat>
-        </StatGroup>
-        {room.contract ? (
-          <Box>
-            <Text>
-              <strong>Contract ID:</strong> {room.contract.id}
-            </Text>
-            <Link
-              to={`/owner/my-apartments/${apartmentId}/room/${room.id}/contracts/${room.contract.id}`}
-            >
-              <Button colorScheme="blue">Room Contract</Button>
-            </Link>
-          </Box>
-        ) : (
-          <Text>No contract available for this room.</Text>
-        )}
-
-        {renter ? (
-          <Box>
-            <Text>
-              <strong>Renter name:</strong> {renter.first_name}{" "}
-              {renter.last_name}
-            </Text>
-            <Text>
-              <strong>email:</strong> {renter.email}
-            </Text>
-            <Image
-              src={renter.avatar}
-              alt="Renter's avatar"
-              width="50px"
-              height="50px"
-            />
-          </Box>
-        ) : (
-          <Text>No renter assigned to this room.</Text>
-        )}
+          <InputGroup>
+            <Input type="file" accept="image/*" onChange={handleImageChange} />
+            <InputRightElement>
+              <IconButton
+                aria-label="Upload"
+                icon={<AddIcon />}
+                colorScheme="teal"
+              />
+            </InputRightElement>
+          </InputGroup>
+        </Flex>
+        <Flex justify="space-between" align="center" mt={4}>
+          <UpdateRoomForm
+            room={room}
+            apartmentId={apartmentId}
+            onUpdate={(updatedRoom: Room) => setRoom(updatedRoom)}
+          />
+          <DeleteRoom
+            roomId={room.id}
+            apartmentId={apartmentId}
+            onDelete={handleRoomDelete}
+          />
+        </Flex>
+        <Text fontSize="lg" color="gray.600" mt={4}>
+          {room.description}
+        </Text>
       </VStack>
       <Flex justifyContent="center">
         <HStack

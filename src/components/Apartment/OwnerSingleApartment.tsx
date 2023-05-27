@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { Apartment, Room } from "../../types";
 import { useAuthorizedData } from "../../utils/useAuthorizedData";
 import {
-  List,
-  ListItem,
   Button,
   Heading,
   Text,
@@ -15,30 +13,28 @@ import {
   Image,
   InputGroup,
   InputRightElement,
-  StatGroup,
   Stat,
   StatLabel,
   StatNumber,
+  Stack,
+  Icon,
+  Badge,
+  SimpleGrid,
 } from "@chakra-ui/react";
+import {
+  MdAcUnit,
+  MdOutlineApartment,
+  MdOutlineHouseSiding,
+} from "react-icons/md";
+
 import { useParams, Link } from "react-router-dom";
 import UpdateApartmentForm from "./UpdateApartmentForm";
 import DeleteApartment from "./DeleteApartment";
 import AddRoomForm from "../Room/AddRoomForm";
 import api from "../../utils/api";
-import {
-  AddIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DeleteIcon,
-} from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import ApartmentThumbnail from "../images/ApartmentThumbnail";
-
-interface ImageItem {
-  id: number;
-  original: string;
-  thumbnail: string;
-  renderItem: () => JSX.Element;
-}
+import { Carousel } from "react-bootstrap";
 
 const SingleApartment: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -53,7 +49,6 @@ const SingleApartment: React.FC = () => {
     }
   }, [apartmentData, status]);
 
-  // Add state for image file
   const [] = useState<string | null>(null);
 
   const handleImageChange = async (
@@ -134,22 +129,6 @@ const SingleApartment: React.FC = () => {
     ),
   }));
 
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-
-  const handleImageNext = () => {
-    if (imageItems) {
-      setSelectedImageIndex((prevIndex) => (prevIndex + 1) % imageItems.length);
-    }
-  };
-
-  const handleImagePrev = () => {
-    if (imageItems) {
-      setSelectedImageIndex(
-        (prevIndex) => (prevIndex - 1 + imageItems.length) % imageItems.length
-      );
-    }
-  };
-
   if (status === "loading") {
     return <div>Loading...</div>;
   }
@@ -165,161 +144,170 @@ const SingleApartment: React.FC = () => {
       p="6"
       bg="white"
       borderRadius="lg"
-      boxShadow="md"
+      boxShadow="xl"
     >
-      <Flex justify="center" align="center">
-        <Heading>{apartment.address}</Heading>
+      <Flex
+        justify="center"
+        align="center"
+        borderBottom="1px"
+        borderColor="gray.200"
+        pb="4"
+      >
+        <Heading size="xl" color="teal.500">
+          {apartment.address}
+        </Heading>
       </Flex>
-      <VStack align="stretch" spacing={6}>
-        <Flex justify="center" align="center" mt={4}>
-          {imageItems && imageItems.length > 0 && (
-            <>
-              <IconButton
-                aria-label="Previous image"
-                icon={<ChevronLeftIcon />}
-                onClick={handleImagePrev}
-                isDisabled={imageItems.length <= 1}
-                colorScheme="gray"
-                variant="outline"
-                size="sm"
+      <Carousel>
+        {imageItems &&
+          imageItems.map((imageItem, index) => (
+            <Carousel.Item key={index}>
+              <Image
+                src={imageItem.original}
+                alt={imageItem.original}
+                borderRadius="lg"
+                boxShadow="md"
               />
+            </Carousel.Item>
+          ))}
+      </Carousel>
+      <VStack align="stretch" spacing={6} mt={4}>
+        <Box bg="gray.100" p={4} borderRadius="md">
+          <Heading size="lg" mb={2} color="teal.400">
+            <Icon as={MdOutlineApartment} color="teal.400" /> Apartment Details
+          </Heading>
+          <SimpleGrid columns={2} spacing={4}>
+            <Stack>
+              <Text fontSize="md" color="gray.600">
+                <Icon as={MdOutlineHouseSiding} color="teal.300" /> Size
+              </Text>
+              <Text fontSize="lg" fontWeight="bold">
+                {apartment.size} sqm
+              </Text>
+            </Stack>
+            <Stack>
+              <Text fontSize="md" color="gray.600">
+                <Icon as={MdAcUnit} color="teal.300" /> AC
+              </Text>
+              <Badge
+                variant={apartment.ac ? "solid" : "outline"}
+                colorScheme={apartment.ac ? "green" : "red"}
+              >
+                {apartment.ac ? "Yes" : "No"}
+              </Badge>
+            </Stack>
+            <Stat>
+              <StatLabel fontSize="md" color="gray.600">
+                Balcony
+              </StatLabel>
+              <StatNumber fontSize="lg" fontWeight="bold">
+                {apartment.balcony ? "Yes" : "No"}
+              </StatNumber>
+            </Stat>
+            <Stat>
+              <StatLabel fontSize="md" color="gray.600">
+                Pets
+              </StatLabel>
+              <StatNumber fontSize="lg" fontWeight="bold">
+                {apartment.allowed_pets ? "Yes" : "No"}
+              </StatNumber>
+            </Stat>
+            <Stat>
+              <StatLabel fontSize="md" color="gray.600">
+                BBQ Allowed
+              </StatLabel>
+              <StatNumber fontSize="lg" fontWeight="bold">
+                {apartment.bbq_allowed ? "Yes" : "No"}
+              </StatNumber>
+            </Stat>
+            <Stat>
+              <StatLabel fontSize="md" color="gray.600">
+                Smoking Allowed
+              </StatLabel>
+              <StatNumber fontSize="lg" fontWeight="bold">
+                {apartment.smoking_allowed ? "Yes" : "No"}
+              </StatNumber>
+            </Stat>
+          </SimpleGrid>
+        </Box>
 
-              <Box maxW="100%" h="450px" borderRadius="lg" overflow="hidden">
-                <Image
-                  src={(imageItems[selectedImageIndex] as ImageItem).original}
-                  alt={(imageItems[selectedImageIndex] as ImageItem).original}
-                  objectFit="contain"
-                  w="100%"
-                  h="100%"
-                />
-              </Box>
-
-              <IconButton
-                aria-label="Next image"
-                icon={<ChevronRightIcon />}
-                onClick={handleImageNext}
-                isDisabled={imageItems.length <= 1}
-                colorScheme="gray"
-                variant="outline"
-                size="sm"
-              />
-
-              <IconButton
-                aria-label="Delete image"
-                icon={<DeleteIcon />}
-                onClick={() =>
-                  handleDeleteImage(
-                    (imageItems[selectedImageIndex] as ImageItem).id
-                  )
-                }
-                colorScheme="red"
-                variant="outline"
-                ml={2}
-                size="sm"
-              />
-            </>
-          )}
-        </Flex>
-
-        <StatGroup width="100%" justifyContent="space-around" mt={4}>
-          <Stat>
-            <StatLabel fontSize="md">Size</StatLabel>
-            <StatNumber fontSize="sm">{apartment.size} sqm </StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel fontSize="md">Balcony</StatLabel>
-            <StatNumber fontSize="sm">
-              {apartment.balcony ? "Yes" : "No"}
-            </StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel fontSize="md">Smoking</StatLabel>
-            <StatNumber fontSize="sm">
-              {apartment.smoking_allowed ? "Yes" : "No"}
-            </StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel fontSize="md">Pets</StatLabel>
-            <StatNumber fontSize="sm">
-              {apartment.allowed_pets ? "Yes" : "No"}
-            </StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel fontSize="md">AC</StatLabel>
-            <StatNumber fontSize="sm">{apartment.ac ? "Yes" : "No"}</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel fontSize="md">BBQ</StatLabel>
-            <StatNumber fontSize="sm">
-              {apartment.bbq_allowed ? "Yes" : "No"}
-            </StatNumber>
-          </Stat>
-        </StatGroup>
         <Flex direction="column" alignItems="flex-start">
-          <Text fontSize="lg" fontWeight="bold" mb={2}>
+          <Text fontSize="lg" fontWeight="bold" mb={2} color="teal.400">
             Upload Images:
           </Text>
           <InputGroup>
             <Input type="file" accept="image/*" onChange={handleImageChange} />
             <InputRightElement>
-              <IconButton aria-label="Upload" icon={<AddIcon />} />
+              <IconButton
+                aria-label="Upload"
+                icon={<AddIcon />}
+                colorScheme="teal"
+              />
             </InputRightElement>
           </InputGroup>
         </Flex>
-        <Flex>
+        <Flex justify="space-between" align="center" mt={4}>
           <UpdateApartmentForm
             apartment={apartment}
             onUpdate={updateApartment}
           />
-          <Box ml={30}>
-            <DeleteApartment apartmentId={id} />
-          </Box>
+          <DeleteApartment apartmentId={id} />
         </Flex>
-        <Text fontSize="lg" color="gray.600">
+        <Text fontSize="lg" color="gray.600" mt={4}>
           {apartment.description}
         </Text>
 
-        {/* Add image gallery using react-image-gallery */}
-
-        <Box>
-          <Heading size="md" mb={2}>
+        <Box mt={4}>
+          <Heading size="lg" mb={2} color="teal.400">
             Rooms
           </Heading>
-          <List spacing={3}>
+          <SimpleGrid columns={2} spacing={4}>
             {apartment.rooms?.map((room: Room) => (
               <Link
                 key={room.id}
                 to={`/owner/my-apartments/${apartment.id}/room/${room.id}`}
               >
-                <ListItem
+                <Box
                   p="4"
                   rounded="md"
                   bg="gray.50"
                   boxShadow="md"
-                  transition="background 0.2s"
+                  transition="all 0.3s ease-in-out"
                   _hover={{
-                    bg: "gray.100",
+                    transform: "scale(1.02)",
+                    boxShadow: "lg",
                   }}
                 >
-                  <Heading as="h1" size="xl" textAlign="center" my={8}>
+                  <Heading
+                    as="h4"
+                    size="md"
+                    textAlign="center"
+                    my={4}
+                    color="teal.500"
+                  >
                     Room #{room.id}
                   </Heading>
-                  <Flex align="center" justify="center" mb={8}>
-                    <ApartmentThumbnail src={room.images?.[0]?.image || ""} />
-                  </Flex>
-                  <VStack spacing={2} alignItems="start">
-                    <Text fontWeight="bold">Price per month:</Text>
-                    <Text>{room.price_per_month}</Text>
-                    <Text fontWeight="bold">Size:</Text>
-                    <Text>{room.size}</Text>
+                  <ApartmentThumbnail src={room.images?.[0]?.image || ""} />
+                  <VStack spacing={2} alignItems="start" mt={4}>
+                    <Text fontWeight="bold" color="gray.600">
+                      Price per month:
+                    </Text>
+                    <Text fontSize="lg" fontWeight="bold">
+                      {room.price_per_month}
+                    </Text>
+                    <Text fontWeight="bold" color="gray.600">
+                      Size:
+                    </Text>
+                    <Text fontSize="lg" fontWeight="bold">
+                      {room.size}
+                    </Text>
                   </VStack>
-                </ListItem>
+                </Box>
               </Link>
             ))}
-          </List>
+          </SimpleGrid>
         </Box>
 
-        <Flex justify="space-between" align="center">
+        <Flex justify="space-between" align="center" mt={4}>
           <AddRoomForm
             apartmentId={apartment.id}
             isOpen={false}

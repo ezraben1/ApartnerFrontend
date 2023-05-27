@@ -56,9 +56,7 @@ const RenterSingleContract: React.FC = () => {
   }
 
   if (status === "error" || !contract) {
-    console.log("roomId: ", roomId);
-    console.log("contractId: ", contractId);
-    return <div>Error loading contract data.</div>;
+    return <div>Error loading contract data. No Contract! </div>;
   }
 
   return (

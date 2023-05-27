@@ -10,6 +10,7 @@ import {
   VStack,
   Text,
   Flex,
+  useColorModeValue,
 } from "@chakra-ui/react";
 
 interface RoomListProps {
@@ -18,37 +19,39 @@ interface RoomListProps {
 }
 
 const RoomList: React.FC<RoomListProps> = ({ rooms, apartmentId }) => {
+  const bgHoverColor = useColorModeValue("blue.100", "blue.900");
+  const bgColor = useColorModeValue("gray.50", "gray.900");
+
   return (
-    <Box>
-      <Heading as="h2" size="md" mb={4}>
+    <Box p={{ base: 2, md: 4 }} borderRadius="lg" boxShadow="md" bg={bgColor}>
+      <Heading as="h2" size="lg" mb={4} color="teal.500">
         Rooms
       </Heading>
-      <List spacing={4}>
+      <List spacing={6}>
         {rooms?.map((room) => (
           <Link
             key={room.id}
             to={`/owner/my-apartments/${apartmentId}/room/${room.id}`}
           >
             <ListItem
-              p="4"
-              rounded="md"
-              bg="gray.50"
-              boxShadow="md"
-              transition="background 0.2s"
+              p={{ base: 4, md: 6 }}
+              rounded="lg"
+              transition="background 0.2s, transform 0.2s"
               _hover={{
-                bg: "gray.100",
+                bg: bgHoverColor,
+                transform: "translateY(-2px)",
               }}
             >
               <Flex align="center" justify="space-between">
                 <RoomThumbnail src={room.images[0]?.image || ""} />
                 <VStack align="start" spacing={2} flex="1" marginLeft="16px">
-                  <Text fontSize="md" fontWeight="bold">
+                  <Text fontSize="lg" fontWeight="bold" color="blue.500">
                     Size: {room.size}
                   </Text>
-                  <Text fontSize="md">
+                  <Text fontSize="lg" color="gray.600">
                     Price per month: {room.price_per_month}
                   </Text>
-                  <Text fontSize="md">
+                  <Text fontSize="lg" color="gray.600">
                     Window: {room.window ? "Yes" : "No"}
                   </Text>
                 </VStack>

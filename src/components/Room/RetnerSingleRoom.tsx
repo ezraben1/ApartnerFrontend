@@ -5,18 +5,26 @@ import {
   Text,
   Flex,
   Box,
-  VStack,
   Image,
-  StatGroup,
+  Stack,
   Stat,
   StatLabel,
   StatNumber,
   Button,
+  HStack,
+  Icon,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { Room } from "../../types";
 import { fetchUserId } from "../../utils/userId";
 import { useUserType } from "../../utils/useUserType";
+
+import {
+  MdOutlineSquareFoot,
+  MdOutlineHouseSiding,
+  MdOutlineWindow,
+} from "react-icons/md";
+import { Badge } from "@chakra-ui/react";
 
 const RenterSingleRoom: React.FC = () => {
   const [room, setRoom] = useState<Room | null>(null);
@@ -73,78 +81,89 @@ const RenterSingleRoom: React.FC = () => {
   }
 
   return (
-    <Box
-      maxW="1000px"
-      mx="auto"
-      p="6"
-      bg="white"
-      borderRadius="lg"
-      boxShadow="md"
+    <Flex
+      justify="center"
+      align="center"
+      w="100%"
+      minH="calc(100vh - 6rem)"
+      bg="gray.100"
+      p={4}
     >
-      <Flex justify="center" align="center">
-        <Heading>{`${room?.size} Room in ${room?.city}, ${room?.street} ${room?.building_number}`}</Heading>
-      </Flex>
-      <VStack align="stretch" spacing={6}>
-        <Flex justify="center" align="center" mt={4}>
+      <Box maxW="60rem" w="100%">
+        <Stack spacing={8}>
+          <Heading as="h1" size="2xl">
+            Room Details
+          </Heading>
           {room?.images && room.images.length > 0 && (
-            <Box maxW="100%" h="450px" borderRadius="lg" overflow="hidden">
-              <Image
-                src={room?.images[0]?.image}
-                alt="Room"
-                objectFit="contain"
-                w="100%"
-                h="100%"
-              />
-            </Box>
+            <Image
+              src={room?.images[0]?.image}
+              alt="Room"
+              objectFit="contain"
+              w="100%"
+              h="450px"
+            />
           )}
-        </Flex>
-        <Flex>
-          <Stat>
-            <StatLabel fontSize="md">Description</StatLabel>
-            <StatNumber fontSize="sm">{room?.description}</StatNumber>
-          </Stat>
-        </Flex>
-
-        <StatGroup width="100%" justifyContent="space-around" mt={4}>
-          <Stat>
-            <StatLabel fontSize="md">Size</StatLabel>
-            <StatNumber fontSize="sm">{room?.size} </StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel fontSize="md">Price per Month</StatLabel>
-            <StatNumber fontSize="sm">${room?.price_per_month}</StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel fontSize="md">Window</StatLabel>
-            <StatNumber fontSize="sm">{room?.window ? "Yes" : "No"}</StatNumber>
-          </Stat>
-
-          <Stat>
-            <StatLabel fontSize="md">Contract Start Date</StatLabel>
-            <StatNumber fontSize="sm">
-              {room?.contract ? room.contract.start_date : "N/A"}
-            </StatNumber>
-          </Stat>
-          <Stat>
-            <StatLabel fontSize="md">Contract End Date</StatLabel>
-            <StatNumber fontSize="sm">
-              {room?.contract ? room.contract.end_date : "N/A"}
-            </StatNumber>
-          </Stat>
-        </StatGroup>
-        <Text fontSize="lg" color="gray.600">
-          {room?.description}
-        </Text>
-        <Link to={`/renter/my-bills/`}>
-          <Button colorScheme="blue">View Bills</Button>
-        </Link>
-        <Link
-          to={`/renter/my-room/${room?.id}/contracts/${room?.contract?.id}`}
-        >
-          <Button colorScheme="blue">View contract</Button>
-        </Link>
-      </VStack>
-    </Box>
+          <Box bg="gray.200" p={4} borderRadius="md">
+            <Heading size="md" mb={2}>
+              Description
+            </Heading>
+            <Text>{room?.description}</Text>
+          </Box>
+          <Box bg="gray.200" p={4} borderRadius="md">
+            <Heading size="md" mb={2}>
+              Room Details
+            </Heading>
+            <HStack spacing={4}>
+              <Stack>
+                <Text>
+                  <Icon as={MdOutlineSquareFoot} /> Size
+                </Text>
+                <Text>{room.size} sqm</Text>
+              </Stack>
+              <Stack>
+                <Text>
+                  <Icon as={MdOutlineHouseSiding} /> Price
+                </Text>
+                <Text>{room.price_per_month} $</Text>
+              </Stack>
+              <Stack>
+                <Text>
+                  <Icon as={MdOutlineWindow} /> Window
+                </Text>
+                <Badge
+                  variant={window ? "solid" : "outline"}
+                  colorScheme={window ? "green" : "red"}
+                >
+                  {window ? "Yes" : "No"}
+                </Badge>
+              </Stack>
+              <Stat>
+                <StatLabel fontSize="md">Contract Start Date</StatLabel>
+                <StatNumber fontSize="sm">
+                  {room?.contract ? room.contract.start_date : "N/A"}
+                </StatNumber>
+              </Stat>
+              <Stat>
+                <StatLabel fontSize="md">Contract End Date</StatLabel>
+                <StatNumber fontSize="sm">
+                  {room?.contract ? room.contract.end_date : "N/A"}
+                </StatNumber>
+              </Stat>
+            </HStack>
+          </Box>
+        </Stack>
+        <HStack mt={6} spacing={6}>
+          <Link to={`/renter/my-bills/`}>
+            <Button colorScheme="blue">View Bills</Button>
+          </Link>
+          <Link
+            to={`/renter/my-room/${room?.id}/contracts/${room?.contract?.id}`}
+          >
+            <Button colorScheme="blue">View contract</Button>
+          </Link>
+        </HStack>
+      </Box>
+    </Flex>
   );
 };
 

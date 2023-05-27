@@ -121,9 +121,7 @@ const Header: React.FC<HeaderProps> = ({}) => {
                     <MenuItem as={RouterLink} to="/renter/my-room">
                       My Room
                     </MenuItem>
-                    <MenuItem as={RouterLink} to="/renter/Deposits-Guarantees">
-                      Deposits and Guarantees
-                    </MenuItem>
+
                     <MenuItem as={RouterLink} to="/searcher/search">
                       Search
                     </MenuItem>
@@ -303,9 +301,7 @@ const NavLinks = () => {
             <MenuItem as={RouterLink} to="/renter/my-room">
               My Room
             </MenuItem>
-            <MenuItem as={RouterLink} to="/renter/Deposits-Guarantees">
-              Deposits and Guarantees
-            </MenuItem>
+
             <MenuItem as={RouterLink} to="/searcher/search">
               Search
             </MenuItem>
