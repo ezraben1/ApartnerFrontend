@@ -92,6 +92,9 @@ const Header: React.FC<HeaderProps> = ({}) => {
                     <MenuItem as={RouterLink} to="/owner/contract-suggestions">
                       Contract Suggestions
                     </MenuItem>
+                    <MenuItem as={RouterLink} to="/searcher/search">
+                      Search
+                    </MenuItem>
                   </>
                 )}
                 {userType === "searcher" && (
@@ -117,6 +120,12 @@ const Header: React.FC<HeaderProps> = ({}) => {
                     </MenuItem>
                     <MenuItem as={RouterLink} to="/renter/my-room">
                       My Room
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to="/renter/Deposits-Guarantees">
+                      Deposits and Guarantees
+                    </MenuItem>
+                    <MenuItem as={RouterLink} to="/searcher/search">
+                      Search
                     </MenuItem>
                   </>
                 )}
@@ -225,6 +234,9 @@ const NavLinks = () => {
             <MenuItem as={RouterLink} to="/owner/contract-suggestions">
               Contract Suggestions
             </MenuItem>
+            <MenuItem as={RouterLink} to="/searcher/search">
+              Search
+            </MenuItem>
           </MenuList>
         </Menu>
       )}
@@ -290,6 +302,12 @@ const NavLinks = () => {
             </MenuItem>
             <MenuItem as={RouterLink} to="/renter/my-room">
               My Room
+            </MenuItem>
+            <MenuItem as={RouterLink} to="/renter/Deposits-Guarantees">
+              Deposits and Guarantees
+            </MenuItem>
+            <MenuItem as={RouterLink} to="/searcher/search">
+              Search
             </MenuItem>
           </MenuList>
         </Menu>

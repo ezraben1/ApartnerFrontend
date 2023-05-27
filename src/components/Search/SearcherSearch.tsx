@@ -39,9 +39,6 @@ const SearcherSearch: React.FC = () => {
     return <div>Please log in to access this page.</div>;
   }
 
-  if (userType !== "searcher") {
-    return <div>You are not a Searcher!</div>;
-  }
   return (
     <div>
       <SearchFilters onFilterSubmit={handleFilterSubmit} rooms={rooms} />

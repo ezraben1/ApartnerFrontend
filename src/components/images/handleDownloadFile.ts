@@ -5,7 +5,7 @@ export const handleDownloadFile = async (
   downloadEndpoint: string,
   fileId: string,
   fileType: string,
-  fileExtension?: string
+  fileExtension: string = 'pdf'
 ) => {
   try {
     const blob = await api.getBlob(downloadEndpoint);
@@ -25,5 +25,3 @@ export const handleDownloadFile = async (
     console.error('Error downloading file:', error);
   }
 };
-
-

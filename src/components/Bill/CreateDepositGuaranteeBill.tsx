@@ -4,13 +4,15 @@ import api from "../../utils/api";
 import { Bill } from "../../types";
 import { AxiosError } from "axios";
 
-interface AddBillProps {
-  apartmentId: string;
+interface CreateDepositGuaranteeBillProps {
   onAdd?: (newBill: Bill) => void;
+  apartmentId: string;
 }
 
-const AddBill: React.FC<AddBillProps> = ({ apartmentId, onAdd = () => {} }) => {
-  const [billType, setBillType] = useState("");
+const CreateDepositGuaranteeBill: React.FC<CreateDepositGuaranteeBillProps> = ({
+  onAdd = () => {},
+  apartmentId,
+}) => {
   const [amount, setAmount] = useState(0);
   const [date, setDate] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -27,34 +29,27 @@ const AddBill: React.FC<AddBillProps> = ({ apartmentId, onAdd = () => {} }) => {
       return;
     }
 
-    if (!file) {
-      alert("Please select a file");
-      return;
-    }
-    if (!billType) {
-      console.error("No bill type selected");
-      return;
-    }
-
     const formData = new FormData();
+
     formData.append("apartment", apartmentId);
-    formData.append("bill_type", billType);
+    formData.append("bill_type", "deposits_guarantees");
     formData.append("amount", String(amount));
     formData.append("date", date);
-    formData.append("file", file || new Blob());
 
+    // Only append file to form data if there is a file
     if (file) {
       formData.append("file", file);
     }
 
     try {
       const response = await api.postWithFormData(
-        `/owner/owner-bills/`,
+        `/renter/my-apartment/deposits-guarantees/`,
         formData
       );
       if (response.status === 201) {
         const newBill = await response.json();
         onAdd(newBill);
+        window.location.reload(); // Refresh the page
       } else {
         const errorData = await response.json();
         console.error("Server error message:", errorData);
@@ -70,22 +65,6 @@ const AddBill: React.FC<AddBillProps> = ({ apartmentId, onAdd = () => {} }) => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="billType">
-        <Form.Label>Bill Type</Form.Label>
-        <Form.Select
-          value={billType}
-          onChange={(e) => setBillType(e.target.value)}
-        >
-          <option value="" disabled>
-            Select bill type
-          </option>
-          {Bill.BILL_TYPES.map((type) => (
-            <option key={type[0]} value={type[0]}>
-              {type[1]}
-            </option>
-          ))}
-        </Form.Select>
-      </Form.Group>
       <Form.Group controlId="amount">
         <Form.Label>Amount</Form.Label>
         <Form.Control
@@ -108,9 +87,9 @@ const AddBill: React.FC<AddBillProps> = ({ apartmentId, onAdd = () => {} }) => {
         <Form.Label>File</Form.Label>
         <Form.Control type="file" onChange={handleFileChange} />
       </Form.Group>
-      <Button type="submit">Add Bill</Button>
+      <Button type="submit">Add deposits and guarantees</Button>
     </Form>
   );
 };
 
-export default AddBill;
+export default CreateDepositGuaranteeBill;

@@ -74,7 +74,7 @@ const AddRoomForm: React.FC<AddRoomFormProps> = ({ apartmentId }) => {
           size: "",
           price_per_month: null,
           window: false,
-          apartment: apartmentId, // Updated this line
+          apartment: apartmentId,
         });
 
         alert("Room added successfully!");

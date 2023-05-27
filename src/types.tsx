@@ -95,7 +95,13 @@ export interface SuggestedContract {
 export interface Bill {
   id: number;
   apartment: Apartment;
-  bill_type: "electricity" | "gas" | "water" | "rent" | "other";
+  bill_type:
+    | "electricity"
+    | "gas"
+    | "water"
+    | "rent"
+    | "deposits_guarantees"
+    | "other";
   amount: number;
   date: string; // Date string
   paid: boolean;

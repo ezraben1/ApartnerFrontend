@@ -32,6 +32,7 @@ import RenterSingleRoom from "./components/Room/RetnerSingleRoom";
 import RenterSingleContract from "./components/Contract/RenterSingleContract";
 import RenterPage from "./pages/Renter/RenterPage";
 import OwnerContractSuggestionList from "./components/Contract/OwnerContractSuggestionList";
+import DepositsGuaranteesPage from "./components/Bill/DepositsGuaranteesPage";
 
 function App() {
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -107,6 +108,10 @@ function App() {
               <Route
                 path="/renter/my-room/:roomId/contracts/:contractId"
                 element={<RenterSingleContract />}
+              />
+              <Route
+                path="/renter/my-apartment/:apartmentId/deposits-guarantees/"
+                element={<DepositsGuaranteesPage />}
               />
 
               <Route path="/searcher" element={<SearcherPage />} />

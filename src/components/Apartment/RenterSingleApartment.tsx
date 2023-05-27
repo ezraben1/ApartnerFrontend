@@ -145,6 +145,10 @@ const RenterSingleApartment: React.FC = () => {
         <Link to={`/renter/my-bills/`}>
           <Button colorScheme="blue">View Bills</Button>
         </Link>
+        <Link to={`/renter/my-apartment/${apartment.id}/deposits-guarantees/`}>
+          <Button colorScheme="blue">My Deposits and Guarantees</Button>
+        </Link>
+
         <Text fontSize="lg" color="gray.600">
           Owner: {apartment.owner_first_name} {apartment.owner_last_name} (
           {apartment.owner_email})

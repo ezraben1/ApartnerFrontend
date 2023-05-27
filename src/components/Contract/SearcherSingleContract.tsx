@@ -185,7 +185,11 @@ const SearcherSingleContract: React.FC = () => {
   }
 
   if (status === "error" || !contract) {
-    return <div>Error loading contract data.</div>;
+    return (
+      <div>
+        Error loading contract data. Please be a searcher to show the contract!
+      </div>
+    );
   }
 
   return (
