@@ -99,9 +99,13 @@ const RenterSingleContract: React.FC = () => {
           </StatNumber>
         </Stat>
       </StatGroup>
-      <Button colorScheme="blue" onClick={handleDownload}>
-        Download Contract
-      </Button>
+      {contract.file ? (
+        <Button colorScheme="blue" onClick={handleDownload}>
+          Download File
+        </Button>
+      ) : (
+        <Heading> No file uploaded</Heading>
+      )}
     </Box>
   );
 };

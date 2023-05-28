@@ -13,7 +13,7 @@ const CreateDepositGuaranteeBill: React.FC<CreateDepositGuaranteeBillProps> = ({
   onAdd = () => {},
   apartmentId,
 }) => {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
@@ -70,9 +70,12 @@ const CreateDepositGuaranteeBill: React.FC<CreateDepositGuaranteeBillProps> = ({
         <Form.Control
           type="number"
           value={amount}
-          onChange={(e) => setAmount(Number(e.target.value))}
+          onChange={(e) => setAmount(e.target.value)}
           required
         />
+        <Form.Text className="text-muted">
+          Please enter an amount greater than 0.
+        </Form.Text>
       </Form.Group>
       <Form.Group controlId="date">
         <Form.Label>Date</Form.Label>
@@ -82,6 +85,9 @@ const CreateDepositGuaranteeBill: React.FC<CreateDepositGuaranteeBillProps> = ({
           onChange={(e) => setDate(e.target.value)}
           required
         />
+        <Form.Text className="text-muted">
+          Please enter a date that is not in the future.
+        </Form.Text>
       </Form.Group>
       <Form.Group controlId="file">
         <Form.Label>File</Form.Label>

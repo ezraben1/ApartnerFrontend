@@ -89,7 +89,9 @@ const RenterSingleBill: React.FC = () => {
           ) : (
             <Text>No file uploaded</Text>
           )}
-          {billId && <PayBill billId={billId} fetchBill={fetchBill} />}
+          {!bill.paid && billId && (
+            <PayBill billId={billId} fetchBill={fetchBill} />
+          )}
         </Stack>
       </VStack>
     </Box>
