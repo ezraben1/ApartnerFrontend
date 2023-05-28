@@ -72,7 +72,14 @@ const SearcherSingleRoom = () => {
 
   const { description, size, price_per_month, window, images, apartment } =
     roomData;
-
+  console.log(
+    "sender",
+    searcherID,
+    "receiver_id:",
+    apartment.owner_id,
+    "apartmentID",
+    apartment.id
+  );
   return (
     <Flex
       justify="center"

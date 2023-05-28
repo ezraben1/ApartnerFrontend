@@ -24,6 +24,7 @@ const InquiryForm: React.FC<InquiryFormProps> = ({
   const [message, setMessage] = useState("");
   const [type, setType] = useState("defects");
   const [image, setImage] = useState<File | null>(null);
+  const [read] = useState(false);
 
   const handleSendMessage = async () => {
     if (!message.trim()) {
@@ -35,12 +36,11 @@ const InquiryForm: React.FC<InquiryFormProps> = ({
       const formData = new FormData();
       formData.append("apartment_id", apartmentID.toString());
       formData.append("message", message);
-      formData.append("type", type);
+      formData.append("type", type || "null");
       formData.append("sender", sender.toString());
-      console.log("receiver_id:", receiver_id); // Add this line to log receiver_id
-
       formData.append("receiver_id", receiver_id.toString());
       formData.append("status", "open");
+      formData.append("read", read.toString());
 
       if (image) {
         formData.append("image", image);
