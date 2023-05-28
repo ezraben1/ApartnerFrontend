@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 // import.meta.env.VITE_API_BASE_URL ||
-const baseURL =  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const baseURL =  '692d-77-125-161-21.ngrok-free.app';
 
 const api: AxiosInstance = axios.create({
   baseURL,
