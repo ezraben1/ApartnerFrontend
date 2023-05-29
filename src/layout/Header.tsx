@@ -138,10 +138,10 @@ const Header: React.FC<HeaderProps> = ({}) => {
                 <MenuItem as={RouterLink} to="/me">
                   Me
                 </MenuItem>
-                <MenuItem as={RouterLink} to="/home/aboutus">
+                <MenuItem as={RouterLink} to="/aboutus">
                   About Us
                 </MenuItem>
-                <MenuItem as={RouterLink} to="/home/contactus">
+                <MenuItem as={RouterLink} to="/contactus">
                   Contact Us
                 </MenuItem>
                 {username ? (
@@ -205,8 +205,8 @@ const NavLinks = () => {
     <Flex as="nav" alignItems="center" justifyContent="space-between" w="100%">
       <InquiryNavLink></InquiryNavLink>
       <NavLink to="/me">Me</NavLink>
-      <NavLink to="/home/aboutus">About Us</NavLink>
-      <NavLink to="/home/contactus">Contact Us</NavLink>
+      <NavLink to="/aboutus">About Us</NavLink>
+      <NavLink to="/contactus">Contact Us</NavLink>
       {userType === "owner" && (
         <Menu>
           <MenuButton
