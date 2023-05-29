@@ -22,7 +22,7 @@ import {
   Badge,
   Button,
 } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 import UpdateRoomForm from "./UpdateRoomForm";
 import DeleteRoom from "./DeleteRoom";
@@ -133,6 +133,7 @@ const OwnerSingleRoom: React.FC = () => {
   };
 
   const imageItems = room?.images.map((image) => ({
+    id: image.id,
     original: image.image,
     thumbnail: image.image,
     renderItem: () => (
@@ -174,21 +175,32 @@ const OwnerSingleRoom: React.FC = () => {
           Room {room.id}
         </Heading>
       </Flex>
-      <Flex justify="center" align="center" width="100%">
-        <Carousel>
-          {imageItems &&
-            imageItems.map((imageItem, index) => (
-              <Carousel.Item key={index}>
-                <Image
-                  src={imageItem.original}
-                  alt={imageItem.original}
-                  borderRadius="lg"
-                  boxShadow="md"
-                />
-              </Carousel.Item>
-            ))}
-        </Carousel>
-      </Flex>
+      <Carousel>
+        {imageItems &&
+          imageItems.map((imageItem, index) => (
+            <Carousel.Item key={index}>
+              <Box>
+                <Box position="relative" display="inline-block">
+                  <Image
+                    src={imageItem.original}
+                    alt={imageItem.original}
+                    borderRadius="lg"
+                    boxShadow="md"
+                  />
+                </Box>
+                <Box mt="2" textAlign="center">
+                  <IconButton
+                    icon={<DeleteIcon />}
+                    aria-label="Delete Image"
+                    colorScheme="red"
+                    size="sm"
+                    onClick={() => handleDeleteImage(imageItem.id)}
+                  />
+                </Box>
+              </Box>
+            </Carousel.Item>
+          ))}
+      </Carousel>
 
       <VStack align="stretch" spacing={6} mt={4}>
         <Box bg="gray.100" p={4} borderRadius="md">
