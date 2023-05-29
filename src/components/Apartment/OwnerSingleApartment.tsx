@@ -32,7 +32,7 @@ import UpdateApartmentForm from "./UpdateApartmentForm";
 import DeleteApartment from "./DeleteApartment";
 import AddRoomForm from "../Room/AddRoomForm";
 import api from "../../utils/api";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import ApartmentThumbnail from "../images/ApartmentThumbnail";
 import { Carousel } from "react-bootstrap";
 
@@ -161,15 +161,29 @@ const SingleApartment: React.FC = () => {
         {imageItems &&
           imageItems.map((imageItem, index) => (
             <Carousel.Item key={index}>
-              <Image
-                src={imageItem.original}
-                alt={imageItem.original}
-                borderRadius="lg"
-                boxShadow="md"
-              />
+              <Box>
+                <Box position="relative" display="inline-block">
+                  <Image
+                    src={imageItem.original}
+                    alt={imageItem.original}
+                    borderRadius="lg"
+                    boxShadow="md"
+                  />
+                </Box>
+                <Box mt="2" textAlign="center">
+                  <IconButton
+                    icon={<DeleteIcon />}
+                    aria-label="Delete Image"
+                    colorScheme="red"
+                    size="sm"
+                    onClick={() => handleDeleteImage(imageItem.id)}
+                  />
+                </Box>
+              </Box>
             </Carousel.Item>
           ))}
       </Carousel>
+
       <VStack align="stretch" spacing={6} mt={4}>
         <Box bg="gray.100" p={4} borderRadius="md">
           <Heading size="lg" mb={2} color="teal.400">
