@@ -3,7 +3,6 @@ import RenterSingleApartment from "../../components/Apartment/RenterSingleApartm
 import RenterBillList from "../../components/Bill/RenterBillList";
 import RenterSingleBill from "../../components/Bill/RetnerSingleBill";
 import RenterSingleContract from "../../components/Contract/RenterSingleContract";
-//import /* Import all your renter-related components here */;
 
 const RenterRoutes = () => {
   return (

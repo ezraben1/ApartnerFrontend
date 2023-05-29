@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import MyApartments from "../../components/Apartment/MyApartments";
 import MyRooms from "../../components/Room/MyRooms";
-import useFetchRooms from "../../components/Room/useFetchRooms";
 import MyContracts from "../../components/Contract/MyContracts";
 import OwnerSingleRoom from "../../components/Room/OwnerSingleRoom";
 import BillsList from "../../components/Bill/OwnerBillsList";
@@ -10,13 +9,7 @@ import OwnerSingleContract from "../../components/Contract/OwnerSingleContract";
 import OwnerSingleApartment from "../../components/Apartment/OwnerSingleApartment";
 import ApartmentContracts from "../../components/Contract/ApartmentContracts";
 
-//import /* Import all your owner-related components here */;
-
 const OwnerRoutes = () => {
-  const { loading, error } = useFetchRooms("/owner/owner-rooms/");
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-
   return (
     <Routes>
       <Route path="/my-rooms" element={<MyRooms />} />

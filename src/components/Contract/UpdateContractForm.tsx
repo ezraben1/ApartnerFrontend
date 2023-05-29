@@ -32,7 +32,6 @@ const UpdateContractForm: React.FC<UpdateContractFormProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [updatedContract, setUpdatedContract] = useState<Contract>(contract);
 
-  // Update updatedContract and contractId whenever the contract prop changes
   useEffect(() => {
     setUpdatedContract(contract);
   }, [contract]);
@@ -50,9 +49,7 @@ const UpdateContractForm: React.FC<UpdateContractFormProps> = ({
       return;
     }
 
-    // Check if the file field is present
     if (updatedContract.file) {
-      // If it is, alert the user and stop the function
       alert("Please delete the file before updating the contract.");
       return;
     }
@@ -69,7 +66,7 @@ const UpdateContractForm: React.FC<UpdateContractFormProps> = ({
     try {
       const response = await api.putWithFormData(
         `/owner/owner-apartments/${apartmentId}/room/${roomId}/contracts/${contract.id}/`,
-        formData // Use formData instead of updatedContract
+        formData
       );
 
       if (response.status === 200) {

@@ -36,7 +36,6 @@ const CreateDepositGuaranteeBill: React.FC<CreateDepositGuaranteeBillProps> = ({
     formData.append("amount", String(amount));
     formData.append("date", date);
 
-    // Only append file to form data if there is a file
     if (file) {
       formData.append("file", file);
     }
@@ -49,7 +48,7 @@ const CreateDepositGuaranteeBill: React.FC<CreateDepositGuaranteeBillProps> = ({
       if (response.status === 201) {
         const newBill = await response.json();
         onAdd(newBill);
-        window.location.reload(); // Refresh the page
+        window.location.reload();
       } else {
         const errorData = await response.json();
         console.error("Server error message:", errorData);

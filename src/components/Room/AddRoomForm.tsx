@@ -44,7 +44,6 @@ const AddRoomForm: React.FC<AddRoomFormProps> = ({ apartmentId }) => {
     setIsOpen(true);
   };
 
-  // Function to close the modal
   const handleClose = () => {
     setIsOpen(false);
   };

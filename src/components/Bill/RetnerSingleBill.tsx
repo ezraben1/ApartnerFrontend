@@ -60,7 +60,7 @@ const RenterSingleBill: React.FC = () => {
               Amount
             </StatLabel>
             <StatNumber fontSize="sm" textAlign="center">
-              ${bill.amount}
+              ₪{bill.amount}
             </StatNumber>
           </Stat>
           <Stat>

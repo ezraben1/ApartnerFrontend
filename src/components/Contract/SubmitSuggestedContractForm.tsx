@@ -48,7 +48,6 @@ const SubmitSuggestedContractForm: React.FC<
         return;
       }
 
-      // Map your frontend data to match your backend data
       const formData = {
         contract: contractId,
         suggested_rent_amount: data.suggested_price,
@@ -64,11 +63,9 @@ const SubmitSuggestedContractForm: React.FC<
       );
 
       if (response.status === 201) {
-        // Show success message
         alert("Contract suggestion submitted successfully");
         onClose();
       } else {
-        // Show error message
         alert("Something went wrong. Please try again later");
       }
     } catch (error) {

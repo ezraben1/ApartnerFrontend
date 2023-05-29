@@ -46,15 +46,15 @@ function Login({ onLoginSuccess }: LoginProps) {
 
           navigate("/");
         } else {
-          console.log("No access_token in response data:", data); // for debugging
+          console.log("No access_token in response data:", data);
           setError("Invalid credentials");
         }
       } else {
-        console.log("Login response not ok:", status); // for debugging
+        console.log("Login response not ok:", status);
         setError("Invalid credentials");
       }
     } catch (error) {
-      console.log("login error:", error); // add this line to log the error object
+      console.log("login error:", error);
       setError("An error occurred while logging in");
     }
   };

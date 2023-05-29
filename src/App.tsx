@@ -33,6 +33,9 @@ import RenterSingleContract from "./components/Contract/RenterSingleContract";
 import RenterPage from "./pages/Renter/RenterPage";
 import OwnerContractSuggestionList from "./components/Contract/OwnerContractSuggestionList";
 import DepositsGuaranteesPage from "./components/Bill/DepositsGuaranteesPage";
+import ContactUs from "./pages/ContactUs";
+import AboutUs from "./pages/AboutUs";
+import Reports from "./components/reports/reports";
 
 function App() {
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -61,6 +64,8 @@ function App() {
               <Route path="/home/:id" element={<PublicSingleRoom />} />
 
               <Route path="/owner" element={<OwnerPage />} />
+              <Route path="/owner/reports" element={<Reports />} />
+
               <Route path="/owner/my-apartments" element={<MyApartments />} />
               <Route
                 path="/owner/my-apartments/:id"
@@ -125,6 +130,8 @@ function App() {
                 path="/searcher/searcher-search/:roomId/contracts/:contractId"
                 element={<SearcherSingleContract />}
               />
+              <Route path="/contactus/" element={<ContactUs />} />
+              <Route path="/aboutus/" element={<AboutUs />} />
             </Routes>
           </Layout>
         </Router>

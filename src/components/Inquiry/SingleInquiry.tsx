@@ -1,4 +1,3 @@
-// SingleInquiry.tsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Box, VStack, Heading, Text, Button, Textarea } from "@chakra-ui/react";

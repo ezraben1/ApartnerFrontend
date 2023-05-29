@@ -79,8 +79,7 @@ const SearcherSingleContract: React.FC = () => {
   };
 
   const uploadSignedDocument = async () => {
-    // Obtain the CSRF token. This is an example of fetching it from a cookie.
-    // You will need to replace this with your method of fetching the CSRF token.
+    // Obtain the CSRF token, fetching it from a cookie.
     const csrftoken = document.cookie
       .split("; ")
       .find((row) => row.startsWith("csrftoken"))
@@ -99,7 +98,6 @@ const SearcherSingleContract: React.FC = () => {
       );
 
       if (response.ok) {
-        // Upload successful
         console.log("Signed document uploaded successfully");
         toast({
           title: "Signing uploaded successfully!",
@@ -109,11 +107,9 @@ const SearcherSingleContract: React.FC = () => {
         });
       } else {
         console.error("Failed to upload signed document");
-        // Handle the error or display an error message to the user
       }
     } catch (error) {
       console.error("Error occurred while uploading signed document: ", error);
-      // Handle the error or display an error message to the user
     }
   };
 

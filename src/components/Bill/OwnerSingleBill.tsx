@@ -71,7 +71,7 @@ const SingleBill: React.FC = () => {
               Amount
             </StatLabel>
             <StatNumber fontSize="sm" textAlign="center">
-              ${bill.amount}
+              ₪{bill.amount}
             </StatNumber>
           </Stat>
           <Stat>
@@ -99,7 +99,6 @@ const SingleBill: React.FC = () => {
             bill={bill || null}
             onUpdate={(updatedBill: Bill) => {
               console.log("Bill updated:", updatedBill);
-              // handle the update
             }}
           />
           <UploadFileForm

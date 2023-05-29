@@ -5,6 +5,7 @@ import {
   Button,
   Heading,
   SimpleGrid,
+  Text,
 } from "@chakra-ui/react";
 import { Card } from "react-bootstrap";
 import { Room } from "../../types";
@@ -51,7 +52,14 @@ const HomePage: React.FC<HomeProps> = ({}) => {
       >
         <img src={logo} alt="Logo" style={{ width: "100%", height: "auto" }} />
       </Flex>
+      <Heading as="h1" size="xl" textAlign="center" my={8}>
+        Discover Your Next Home
+      </Heading>
 
+      <Text as="h2" size="md" textAlign="center" my={4}>
+        Explore a wide variety of rooms tailored to your preferences and budget.
+        Start your journey with us to find the perfect place to live.
+      </Text>
       <Heading as="h1" size="xl" textAlign="center" my={8}>
         Available Rooms
       </Heading>

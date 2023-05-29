@@ -42,7 +42,7 @@ export interface ApartmentImage {
   url: string;
   id: number;
   apartment: Apartment;
-  image: string; // URL of the image
+  image: string;
 }
 
 export interface Room {
@@ -67,17 +67,17 @@ export interface RoomImage {
   url: string | undefined;
   id: number;
   room: Room;
-  image: string; // URL of the image
+  image: string;
 }
 
 export interface Contract {
   id: number;
-  room_id: number; // Add this line
-  apartment_id: number; // Add this line
+  room_id: number;
+  apartment_id: number;
   room: Room;
   owner: CustomUser;
-  start_date: string; // Date string
-  end_date: string; // Date string
+  start_date: string;
+  end_date: string;
   rent_amount: number;
   deposit_amount: number;
   terms_and_conditions: string | null;
@@ -103,11 +103,11 @@ export interface Bill {
     | "deposits_guarantees"
     | "other";
   amount: number;
-  date: string; // Date string
+  date: string;
   paid: boolean;
-  created_at: string; // Date string
-  updated_at: string; // Date string
-  document: string | null; // URL of the file
+  created_at: string;
+  updated_at: string;
+  document: string | null;
   file: File | null;
 }
 
@@ -126,7 +126,7 @@ export interface Review {
   product: Room;
   name: string;
   description: string;
-  date: string; // Date string
+  date: string;
 }
 
 export interface ApartmentAPI {

@@ -60,7 +60,7 @@ const BillsList: React.FC = () => {
               >
                 <VStack align="start" spacing={2}>
                   <Heading size="sm">{bill.bill_type}</Heading>
-                  <Text>Amount: ${bill.amount}</Text>
+                  <Text>Amount: ₪{bill.amount}</Text>
                   <Text>Date: {bill.date}</Text>
                   <Badge
                     colorScheme={bill.paid ? "green" : "red"}

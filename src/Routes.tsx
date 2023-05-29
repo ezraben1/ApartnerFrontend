@@ -1,9 +1,8 @@
-// src/Routes.tsx
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 import HomePage from "./pages/Home/HomePage";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
-import OwnerRoutes from "./pages/Owner/OwnerRoutes"; // Add this import
+import OwnerRoutes from "./pages/Owner/OwnerRoutes";
 import Searcher from "./pages/Searcher/SearcherPage";
 import Renter from "./pages/Renter/RenterPage";
 import { useUserContext } from "./utils/UserContext";

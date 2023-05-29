@@ -33,12 +33,10 @@ const MyContracts: React.FC = () => {
   ) => {
     try {
       const url = `http://127.0.0.1:8000/owner/owner-contract-suggestions/${contractId}/suggestion/${suggestionId}/accept/`;
-      const response: Response = await api.post(url, null); // Pass null as the data parameter since it's a POST request
-      console.log(response); // Log the response
-      // Handle the response as needed
+      const response: Response = await api.post(url, null);
+      console.log(response);
     } catch (error) {
       console.error("Error accepting contract suggestion", error);
-      // Handle the error as needed
     }
   };
 
@@ -49,11 +47,9 @@ const MyContracts: React.FC = () => {
     try {
       const url = `http://127.0.0.1:8000/owner/owner-contract-suggestions/${contractId}/suggestion/${suggestionId}/decline/`;
       const response: Response = await api.remove(url);
-      console.log(response); // Log the response
-      // Handle the response as needed
+      console.log(response);
     } catch (error) {
       console.error("Error declining contract suggestion", error);
-      // Handle the error as needed
     }
   };
 

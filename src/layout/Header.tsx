@@ -92,6 +92,9 @@ const Header: React.FC<HeaderProps> = ({}) => {
                     <MenuItem as={RouterLink} to="/owner/contract-suggestions">
                       Contract Suggestions
                     </MenuItem>
+                    <MenuItem as={RouterLink} to="/owner/reports">
+                      Reports
+                    </MenuItem>
                     <MenuItem as={RouterLink} to="/searcher/search">
                       Search
                     </MenuItem>
@@ -134,6 +137,12 @@ const Header: React.FC<HeaderProps> = ({}) => {
                 </MenuItem>
                 <MenuItem as={RouterLink} to="/me">
                   Me
+                </MenuItem>
+                <MenuItem as={RouterLink} to="/home/aboutus">
+                  About Us
+                </MenuItem>
+                <MenuItem as={RouterLink} to="/home/contactus">
+                  Contact Us
                 </MenuItem>
                 {username ? (
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
@@ -196,7 +205,8 @@ const NavLinks = () => {
     <Flex as="nav" alignItems="center" justifyContent="space-between" w="100%">
       <InquiryNavLink></InquiryNavLink>
       <NavLink to="/me">Me</NavLink>
-
+      <NavLink to="/home/aboutus">About Us</NavLink>
+      <NavLink to="/home/contactus">Contact Us</NavLink>
       {userType === "owner" && (
         <Menu>
           <MenuButton
@@ -232,13 +242,15 @@ const NavLinks = () => {
             <MenuItem as={RouterLink} to="/owner/contract-suggestions">
               Contract Suggestions
             </MenuItem>
+            <MenuItem as={RouterLink} to="/owner/reports">
+              Reports
+            </MenuItem>
             <MenuItem as={RouterLink} to="/searcher/search">
               Search
             </MenuItem>
           </MenuList>
         </Menu>
       )}
-
       {userType === "searcher" && (
         <Menu>
           <MenuButton
@@ -268,7 +280,6 @@ const NavLinks = () => {
           </MenuList>
         </Menu>
       )}
-
       {userType === "renter" && (
         <Menu>
           <MenuButton

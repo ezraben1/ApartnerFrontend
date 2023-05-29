@@ -1,4 +1,3 @@
-// utils/userId.ts
 import api from "./api";
 
 export const fetchUserId = async (): Promise<string | null> => {

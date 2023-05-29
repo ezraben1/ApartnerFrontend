@@ -106,8 +106,8 @@ const RetnerBillsList: React.FC = () => {
                 <ListItem p="4" rounded="md" bg="gray.50">
                   <VStack align="start" spacing={2}>
                     <Heading size="sm">{bill.bill_type}</Heading>
-                    <Text>Amount: ${bill.amount}</Text>
-                    <Text>Date: ${bill.date}</Text>
+                    <Text>Amount: ₪{bill.amount}</Text>
+                    <Text>Date: {bill.date}</Text>
                     <Badge
                       colorScheme={bill.paid ? "green" : "red"}
                       variant="subtle"
