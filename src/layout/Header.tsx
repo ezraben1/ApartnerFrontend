@@ -30,6 +30,8 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({}) => {
   const [isSmallerThanLg] = useMediaQuery("(max-width: 991px)");
   const [username, setUsername] = useState<string | null>(null);
+  const [fullname, setFullname] = useState<string | null>(null);
+
   const { userType } = useUserType();
 
   const navigate = useNavigate();
@@ -40,6 +42,7 @@ const Header: React.FC<HeaderProps> = ({}) => {
       const users = await response.json();
       if (users.length > 0) {
         setUsername(users[0].username);
+        setFullname(users[0].first_name + " " + users[0].last_name);
       }
     };
 
@@ -164,7 +167,7 @@ const Header: React.FC<HeaderProps> = ({}) => {
               {username ? (
                 <>
                   <ChakraText color="white" fontWeight="medium" mr="4">
-                    {username}
+                    {fullname}
                   </ChakraText>
                   <Button colorScheme="blue" onClick={handleLogout}>
                     Logout

@@ -91,7 +91,7 @@ const HomePage: React.FC<HomeProps> = ({}) => {
                   <strong>Size:</strong> {room.size}
                 </Card.Text>
                 <Card.Text>
-                  <strong>Price per month:</strong> ${room.price_per_month}
+                  <strong>Price per month:</strong> ₪{room.price_per_month}
                 </Card.Text>
               </Card.Body>
               <Card.Footer className="text-center">

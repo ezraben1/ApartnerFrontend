@@ -11,7 +11,7 @@ interface AddBillProps {
 
 const AddBill: React.FC<AddBillProps> = ({ apartmentId, onAdd = () => {} }) => {
   const [billType, setBillType] = useState("");
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
@@ -39,7 +39,7 @@ const AddBill: React.FC<AddBillProps> = ({ apartmentId, onAdd = () => {} }) => {
     const formData = new FormData();
     formData.append("apartment", apartmentId);
     formData.append("bill_type", billType);
-    formData.append("amount", String(amount));
+    formData.append("amount", String(Number(amount)));
     formData.append("date", date);
     formData.append("file", file || new Blob());
 
@@ -55,6 +55,7 @@ const AddBill: React.FC<AddBillProps> = ({ apartmentId, onAdd = () => {} }) => {
       if (response.status === 201) {
         const newBill = await response.json();
         onAdd(newBill);
+        alert("bill added!");
       } else {
         const errorData = await response.json();
         console.error("Server error message:", errorData);
@@ -91,7 +92,7 @@ const AddBill: React.FC<AddBillProps> = ({ apartmentId, onAdd = () => {} }) => {
         <Form.Control
           type="number"
           value={amount}
-          onChange={(e) => setAmount(Number(e.target.value))}
+          onChange={(e) => setAmount(e.target.value)}
           required
         />
       </Form.Group>
