@@ -10,9 +10,25 @@ import {
   Textarea,
   Select,
 } from "@chakra-ui/react";
+type FormDataType = {
+  username: string;
+  email: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  user_type: string;
+  age: number | "";
+  gender: string;
+  bio: string;
+  preferred_location: string;
+  preferred_roommates: string;
+  preferred_rent: number | "";
+  phone: string;
+  avatar?: File | null;
+};
 
 function SignUp() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormDataType>({
     username: "",
     email: "",
     password: "",
@@ -34,26 +50,71 @@ function SignUp() {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
+
   const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => ({
       ...prevData,
       avatar: e.target.files ? e.target.files[0] : null,
     }));
   };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const data = new FormData();
-    for (const key in formData) {
-      data.append(key, formData[key as keyof typeof formData]);
+    // check if required fields are filled
+    if (
+      !formData.username ||
+      !formData.email ||
+      !formData.password ||
+      !formData.first_name ||
+      !formData.last_name ||
+      !formData.user_type
+    ) {
+      alert(
+        "Please fill all required fields: username, email, password, first name, last name, user type"
+      );
+      return;
     }
 
-    const response = await api.postWithFormData("signup/", data);
+    const data = new FormData();
+    for (const key in formData) {
+      const formDataKey = key as keyof FormDataType;
+      if (formData[formDataKey]) {
+        // Convert 'age' and 'preferred_rent' fields to integer before sending
+        if (key === "age" || key === "preferred_rent") {
+          data.append(key, String(Number(formData[formDataKey])));
+        } else {
+          data.append(key, formData[formDataKey] as string | Blob);
+        }
+      }
+    }
 
-    if (response.ok) {
-      alert("User created successfully!");
-    } else {
-      alert("Error creating user.");
+    try {
+      const response = await api.postWithFormData("signup/", data);
+      console.log("Response from backend: ", response);
+
+      if (response.ok) {
+        alert("User created successfully!");
+      } else {
+        alert("Error creating user.");
+      }
+    } catch (error: any) {
+      // <-- Use type assertion here
+      console.error("Error submitting form:", error);
+      if (error.response) {
+        // The request was made and the server responded with a status code that falls out of the range of 2xx
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+
+        // Check if the username is already taken
+        if (
+          error.response.data.username &&
+          error.response.data.username[0] ===
+            "A user with that username already exists."
+        ) {
+          alert("Username is already taken. Please choose another one.");
+        }
+      }
     }
   };
 

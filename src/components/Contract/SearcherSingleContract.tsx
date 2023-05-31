@@ -91,7 +91,6 @@ const SearcherSingleContract: React.FC = () => {
         {},
         {
           headers: {
-            // Include the CSRF token in the 'X-CSRFToken' header
             "X-CSRFToken": csrftoken,
           },
         }
